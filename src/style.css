@@ -282,3 +282,16 @@ body.story #story { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 
   .chapter:not(.intro) .story-card { position: sticky; bottom: 3vh; margin-bottom: 0; }
   .chapter:not(.active):not(.intro) .story-card { opacity: 0; pointer-events: none; }
 }
+
+/* Story mode with a mouse: let the pointer reach the chart for tooltips and clicks;
+   only the cards and buttons catch it. Touch keeps the layer so swipes scroll. */
+@media (pointer: fine) {
+  body.story #story { pointer-events: none; }
+  body.story .story-card, body.story #skip-story { pointer-events: auto; }
+}
+#tooltip, #focus-card { z-index: 10; }
+body.story #focus-card { top: 62px; } /* clear of the "Skip to explore" button */
+@media (max-width: 760px) {
+  .chapter.intro { align-items: flex-end; }
+  .chapter.intro .story-card { position: sticky; bottom: 3vh; }
+}

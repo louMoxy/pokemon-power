@@ -33,6 +33,8 @@ export class Stage {
     // user input cancels any camera flight in progress
     this.controls.addEventListener('start', () => { this.cameraTween = null; });
 
+    this.backdrop = null; // optional { scene, camera, update() } drawn behind everything
+    this.renderer.autoClear = false;
     this.callbacks = [];
     this.clock = new THREE.Clock();
     this.cameraTween = null;
@@ -72,6 +74,12 @@ export class Stage {
     }
     for (const fn of this.callbacks) fn(dt, this.clock.elapsedTime);
     this.controls.update();
+    this.renderer.clear();
+    if (this.backdrop) {
+      this.backdrop.update(dt, this.clock.elapsedTime, this.renderer, this.controls.target);
+      this.renderer.render(this.backdrop.scene, this.backdrop.camera);
+      this.renderer.clearDepth();
+    }
     this.renderer.render(this.scene, this.camera);
     this.labels.render(this.scene, this.camera);
   }

@@ -8,7 +8,7 @@ const core = (p) => p.fullyEvolved && !isSpecial(p);
 const strictCore = (p) => core(p) && !p.specialClass;
 const isPseudo = (p) => p.chainLength === 3 && p.fullyEvolved && p.bst === 600 && !isSpecial(p);
 
-// layout: a LAYOUTS key. show: which Pokémon are visible. enter: where Pokémon that
+// mood: backdrop colours (backdrop.js). layout: a LAYOUTS key. show: which Pokémon are visible. enter: where Pokémon that
 // appear in this chapter fly in from ('scatter' | 'left' | 'right' | 'top'; default:
 // grow in place). trend: draw a line through the group averages.
 export function chapters(games) {
@@ -23,7 +23,7 @@ export function chapters(games) {
         power. Every sprite here is one Pokémon. Scroll to see what 28 years of designs reveal.`,
     },
     {
-      id: 'raw', layout: 'generation', show: null, trend: true,
+      id: 'raw', mood: 'default', layout: 'generation', show: null, trend: true,
       title: 'Every Pokémon, by generation',
       body: `Each column is a generation, each sprite a Pokémon placed by its BST. The gold line
         joins the averages: <b>408</b> in Gen 1 up to <b>457</b> in Gen 9.
@@ -31,14 +31,14 @@ export function chapters(games) {
         first stages and legendaries, and that mix moves the average on its own.`,
     },
     {
-      id: 'core', layout: 'generation', show: strictCore, trend: true,
+      id: 'core', mood: 'core', layout: 'generation', show: strictCore, trend: true,
       title: 'Compare like with like',
       body: `Keep only <b>fully evolved, non-legendary</b> Pokémon and the picture changes:
         485 in Gen 1, a dip through Gens 2–3, then <b>one real step in Gen 4</b> (496)…
         and a plateau around 495 for the next five generations. Gen 9: 499.`,
     },
     {
-      id: 'paradox', layout: 'generation', show: core, enter: 'right', trend: true,
+      id: 'paradox', mood: 'paradox', layout: 'generation', show: core, enter: 'right', trend: true,
       title: 'So where does Gen 9’s jump come from?',
       body: `Add back two new classes the games count as “regular”: the <b>11 Ultra Beasts</b>
         (Gen 7, average 567) and the <b>20 Paradox Pokémon</b> (Gen 9, average 578).
@@ -46,7 +46,7 @@ export function chapters(games) {
         one near-legendary class.`,
     },
     {
-      id: 'legends', layout: 'generation', show: (p) => isSpecial(p) && p.fullyEvolved, enter: 'top', trend: true,
+      id: 'legends', mood: 'gold', layout: 'generation', show: (p) => isSpecial(p) && p.fullyEvolved, enter: 'top', trend: true,
       title: 'Meanwhile, legendaries are coming down',
       body: `Fully evolved legendaries peaked around <b>627</b> in Gens 4 and 6 and fell to
         <b>574</b> by Gen 9, while becoming far more common: 3% of Gen 1, but about one in
@@ -54,13 +54,13 @@ export function chapters(games) {
         <b>119 BST to 52</b>. The tiers are converging.`,
     },
     {
-      id: 'launch', layout: 'release', show: (p) => launch.has(p.debutGame),
+      id: 'launch', mood: 'core', layout: 'release', show: (p) => launch.has(p.debutGame),
       title: 'Launch day',
       body: `Now ordered by the game each Pokémon debuted in. Until 2017, every new species
         arrived with its generation’s launch games: Red & Green, Gold & Silver and so on.`,
     },
     {
-      id: 'dlc', layout: 'release', show: null, enter: 'right',
+      id: 'dlc', mood: 'gold', layout: 'release', show: null, enter: 'right',
       title: 'The DLC era',
       body: `Since Ultra Sun & Ultra Moon, <b>39 species</b> have arrived after launch, through
         follow-ups, DLC and events: the gold column. They average <b>536 BST</b> against 423 at launch, and
@@ -68,7 +68,7 @@ export function chapters(games) {
         <br><br>Updates need headline Pokémon, and headline Pokémon have big stats.`,
     },
     {
-      id: 'types', layout: 'typeGen', show: null,
+      id: 'types', mood: 'types', layout: 'typeGen', show: null,
       title: 'Which types got buffed?',
       body: `Tile colour is a cell’s average BST, from dark (weak) to gold (strong).
         <b>Dragon</b> has run hot since Gen 1 (546 on average, flat over time).
@@ -76,7 +76,7 @@ export function chapters(games) {
         fastest. Water never moved.`,
     },
     {
-      id: 'pseudo', layout: 'generation', show: isPseudo, enter: 'left', trend: true,
+      id: 'pseudo', mood: 'dragon', layout: 'generation', show: isPseudo, enter: 'left', trend: true,
       title: 'Some things never creep',
       body: `Every generation gets a <b>pseudo-legendary</b>: a three-stage line ending at
         <b>exactly 600 BST</b>. From Dragonite in 1996 to Baxcalibur in 2022, that line hasn’t

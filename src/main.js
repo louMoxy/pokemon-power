@@ -9,6 +9,7 @@ import { Guides } from './guides.js';
 import { Filters } from './filters.js';
 import { VoxelViewer } from './voxel.js';
 import { Story } from './story.js';
+import { Backdrop } from './backdrop.js';
 
 const stage = new Stage(document.getElementById('scene'));
 const status = document.getElementById('status');
@@ -30,16 +31,9 @@ const ctx = {
 status.textContent = `${pokemon.length.toLocaleString()} Pokémon · 9 generations · 1996–2024`;
 document.body.classList.add('ready');
 
-// ---------- Backdrop: faint starfield far outside the data
-{
-  const n = 1500, pos = new Float32Array(n * 3), v = new THREE.Vector3();
-  for (let i = 0; i < n; i++) pos.set(v.randomDirection().multiplyScalar(160 + Math.random() * 120).toArray(), i * 3);
-  const g = new THREE.BufferGeometry();
-  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  stage.scene.add(new THREE.Points(g, new THREE.PointsMaterial({
-    color: 0x8890b0, size: 0.6, sizeAttenuation: true, fog: false, transparent: true, opacity: 0.6,
-  })));
-}
+// ---------- Backdrop: animated nebula, dot grid and stars behind the chart
+const backdrop = new Backdrop();
+stage.backdrop = backdrop;
 
 // ---------- Sprites + guides
 const field = new SpriteField(pokemon, meta, atlas);
@@ -146,8 +140,10 @@ function select(i) {
   selected = i;
   field.uniforms.uSelected.value = i;
   overlay.showFocus(i >= 0 ? pokemon[i] : null);
-  if (i < 0) { voxels.hide(); goHome(); return; }
+  if (i < 0) { voxels.hide(); if (mode === 'explore') goHome(); return; }
   voxels.show(pokemon[i]);
+  // in the story the camera belongs to the chapter: just open the card
+  if (mode === 'story') return;
   // aim at where the sprite is heading (it may still be animating into place)
   const target = new THREE.Vector3().fromArray(currentLayout.positions, i * 3);
   // keep the current viewing direction, move in close
@@ -202,6 +198,7 @@ function setLayout(key, { fromFilter = false, story = null } = {}) {
 const story = new Story({
   games,
   onChapter: (ch) => {
+    backdrop.setMood(ch.mood ?? 'default');
     ctx.visible = ch.show ? ch.show(pokemon) : null;
     setLayout(ch.layout, { story: ch });
   },
@@ -209,8 +206,26 @@ const story = new Story({
   onExplore: () => enterExplore(),
 });
 
+// Story mode with a mouse: the scroll layer lets pointer events through to the chart
+// (see CSS), so hover tooltips work. The chart's own pan/zoom is off, and the wheel and
+// paging keys scroll the story instead.
+function syncControls() { stage.controls.enabled = mode === 'explore'; }
+stage.renderer.domElement.addEventListener('wheel', (e) => {
+  if (mode !== 'story') return;
+  e.preventDefault();
+  story.el.scrollBy({ top: e.deltaMode === 1 ? e.deltaY * 40 : e.deltaY });
+}, { passive: false });
+addEventListener('keydown', (e) => {
+  if (mode !== 'story' || e.target.closest?.('input, textarea, button')) return;
+  const page = story.el.clientHeight * 0.8;
+  const by = { PageDown: page, ' ': page, ArrowDown: 80, PageUp: -page, ArrowUp: -80 }[e.key];
+  if (by) { e.preventDefault(); story.el.scrollBy({ top: e.shiftKey && e.key === ' ' ? -page : by }); }
+  if (e.key === 'Escape' && selected >= 0) select(-1);
+});
+
 function enterStory() {
   mode = 'story';
+  syncControls();
   if (selected >= 0) select(-1);
   filters.setOpen(false);
   story.show();
@@ -218,6 +233,9 @@ function enterStory() {
 
 function enterExplore() {
   mode = 'explore';
+  backdrop.setMood('default');
+  syncControls();
+  if (selected >= 0) select(-1);
   story.hide();
   ctx.visible = exploreVisible;
   setLayout('generation');
