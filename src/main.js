@@ -11,16 +11,39 @@ import { VoxelViewer } from './voxel.js';
 import { Story } from './story.js';
 import { Backdrop } from './backdrop.js';
 
-const stage = new Stage(document.getElementById('scene'));
 const status = document.getElementById('status');
+const loader = document.getElementById('loader');
+const loaderBar = loader.querySelector('.bar i');
+const loaderText = loader.querySelector('.loader-text');
+function loaderError(message) {
+  loader.classList.add('error');
+  loaderText.textContent = message;
+}
+
+// WebGL can be missing or disabled (old devices, some locked-down browsers)
+let stage;
+try {
+  stage = new Stage(document.getElementById('scene'));
+} catch (err) {
+  loaderError('This page needs WebGL, which your browser or device doesn’t support. Try a recent Chrome, Firefox, Safari or Edge.');
+  throw err;
+}
+
+// The backdrop starts drawing straight away, so the loading screen sits on the nebula
+const backdrop = new Backdrop();
+stage.backdrop = backdrop;
 
 let data;
 try {
-  data = await loadData(stage.renderer);
+  data = await loadData(stage.renderer, (p) => {
+    loaderBar.style.width = `${Math.round(p * 100)}%`;
+  });
 } catch (err) {
-  status.textContent = 'Could not load the Pokémon data. Please refresh to try again.';
+  loaderError('Could not load the Pokémon data. Check your connection and refresh to try again.');
   throw err;
 }
+loader.classList.add('done');
+setTimeout(() => loader.remove(), 700);
 const { pokemon, meta, games, atlas } = data;
 const isPortrait = () => innerWidth / innerHeight < 0.85;
 const ctx = {
@@ -30,10 +53,6 @@ const ctx = {
 };
 status.textContent = `${pokemon.length.toLocaleString()} Pokémon · 9 generations · 1996–2024`;
 document.body.classList.add('ready');
-
-// ---------- Backdrop: animated nebula, dot grid and stars behind the chart
-const backdrop = new Backdrop();
-stage.backdrop = backdrop;
 
 // ---------- Sprites + guides
 const field = new SpriteField(pokemon, meta, atlas);

@@ -121,6 +121,10 @@ export class Story {
           <p>${c.body}</p>
           ${i === 0 ? '<p class="scroll-cue">Scroll to begin <span aria-hidden="true">↓</span></p>' : ''}
           ${c.final ? '<button type="button" class="explore-btn">Explore the data yourself →</button>' : ''}
+          ${c.final ? `<p class="credits">Data from <a href="https://pokeapi.co" target="_blank" rel="noopener">PokeAPI</a>
+            (<a href="${import.meta.env.BASE_URL}data/pokemon.json" download>download the dataset</a>); release dates
+            from Bulbapedia. Pokémon and their sprites are © Nintendo, Creatures Inc. and GAME FREAK. This is a
+            non-commercial fan project.</p>` : ''}
         </div>
       </section>`).join('') + '<div class="story-end"></div>';
     this.el.querySelector('.explore-btn').addEventListener('click', () => this.onExplore());

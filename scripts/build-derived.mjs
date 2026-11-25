@@ -8,11 +8,16 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { PNG } from 'pngjs';
+import sharp from 'sharp';
 import { UMAP } from 'umap-js';
 import { GAMES, DEBUT_OVERRIDES } from './games.mjs';
 
 const DATA = 'public/data/pokemon.json';
-const ATLAS = 'public/data/atlas.png';
+// The site loads a lossless WebP (~4x smaller than PNG, identical pixels, which the
+// voxel models read back). The PNG is kept locally for reference only.
+const ATLAS_PNG = 'data-cache/atlas.png';
+const ATLAS = 'public/data/atlas.webp';
+const WEB_DATA = 'public/data/pokemon.web.json';
 const META = 'public/data/meta.json';
 const SPRITE_CACHE = 'data-cache/sprites';
 const CELL = 96; // PokeAPI front_default sprites are 96x96
@@ -164,7 +169,10 @@ for (let i = 0; i < data.length; i++) {
   bounds.push([w, h]);
   if ((i + 1) % 200 === 0) console.log(`  ${i + 1}/${data.length}`);
 }
-await fs.writeFile(ATLAS, PNG.sync.write(atlas));
+const atlasPng = PNG.sync.write(atlas);
+await fs.writeFile(ATLAS_PNG, atlasPng);
+// exact: keep the zeroed RGB under transparent pixels (no white fringes when filtered)
+await sharp(atlasPng).webp({ lossless: true, effort: 6, exact: true }).toFile(ATLAS);
 
 // ---------- Debut game and release date
 const gameById = Object.fromEntries(GAMES.map((g) => [g.id, g]));
@@ -193,8 +201,18 @@ data.forEach((p, i) => {
 });
 await fs.writeFile(DATA, JSON.stringify(data));
 
+// Slim copy with only the fields the site reads (pokemon.json stays as the full,
+// downloadable dataset)
+const WEB_FIELDS = ['id', 'name', 'generation', 'types', 'stats', 'bst', 'isLegendary', 'isMythical', 'isBaby',
+  'specialClass', 'evoStage', 'chainLength', 'fullyEvolved', 'debutGame', 'debutDate', 'platform',
+  'umap2', 'atlas', 'spriteSize'];
+await fs.writeFile(WEB_DATA, JSON.stringify(data.map((p) => ({
+  ...Object.fromEntries(WEB_FIELDS.map((k) => [k, p[k]])),
+  pca: p.pca.slice(0, 2), // the Power map only uses PC1 and PC2
+}))));
+
 const meta = {
-  atlas: { file: 'atlas.png', cell: CELL, cols: COLS, rows: ROWS, width: COLS * CELL, height: ROWS * CELL },
+  atlas: { file: 'atlas.webp', cell: CELL, cols: COLS, rows: ROWS, width: COLS * CELL, height: ROWS * CELL },
   stats: STATS,
   pca: {
     explainedVariance: eig.slice(0, 3).map((e) => +(e.value / totalVar).toFixed(4)),

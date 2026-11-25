@@ -5,10 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Power Creep</title>
     <meta name="description" content="Are newer Pokémon stronger? An interactive 3D look at 1,025 Pokémon across nine generations." />
+    <meta name="theme-color" content="#0b0d14" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <meta property="og:title" content="Power Creep: are Pokémon getting stronger?" />
+    <meta property="og:description" content="An interactive data story about 1,025 Pokémon, nine generations and 28 years of base stats, built with three.js." />
+    <meta property="og:type" content="website" />
     <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
     <canvas id="scene" aria-label="3D map of every Pokémon"></canvas>
+    <div id="loader" role="status" aria-live="polite">
+      <div class="loader-title">Power Creep</div>
+      <div class="bar"><i></i></div>
+      <p class="loader-text">Catching 1,025 Pokémon…</p>
+      <noscript><p class="loader-text">This interactive story needs JavaScript.</p></noscript>
+    </div>
 
     <header id="hud">
       <h1>Power Creep</h1>

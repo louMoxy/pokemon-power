@@ -295,3 +295,24 @@ body.story #focus-card { top: 62px; } /* clear of the "Skip to explore" button *
   .chapter.intro { align-items: flex-end; }
   .chapter.intro .story-card { position: sticky; bottom: 3vh; }
 }
+
+/* ---------- Loading screen */
+#loader {
+  position: fixed; inset: 0; z-index: 20; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 14px; text-align: center; padding: 24px;
+  background: radial-gradient(ellipse at 50% 45%, rgba(11, 13, 20, 0.2), rgba(11, 13, 20, 0.75));
+  transition: opacity 0.6s ease;
+}
+#loader.done { opacity: 0; pointer-events: none; }
+.loader-title { font-size: 28px; font-weight: 700; letter-spacing: 0.01em; }
+#loader .bar { width: min(260px, 70vw); height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.1); overflow: hidden; }
+#loader .bar i { display: block; width: 0; height: 100%; background: linear-gradient(90deg, #5b8def, var(--accent)); transition: width 0.25s ease; }
+.loader-text { margin: 0; color: var(--muted); font-size: 13px; max-width: 360px; line-height: 1.5; }
+#loader.error .bar { display: none; }
+#loader.error .loader-text { color: var(--fg); }
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue span { animation: none; }
+}
+.story-card .credits { margin-top: 16px !important; font-size: 11px !important; line-height: 1.5 !important; color: var(--muted) !important; }
+.story-card .credits a { color: var(--muted); }
+body:not(.ready) #hud { visibility: hidden; } /* nothing to show until the data has loaded */
