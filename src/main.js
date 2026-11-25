@@ -1,112 +1,112 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { Stage } from './stage.js';
+import { loadData } from './data.js';
+import { SpriteField } from './sprites.js';
+import { Picker } from './picker.js';
+import { Overlay } from './ui.js';
+import { LAYOUTS } from './layouts.js';
 
-// Placeholder Stat Galaxy: every Pokémon drawn as its sprite (one draw call, GPU points
-// sampling the atlas). Press L to morph between the UMAP "role" layout and the PCA layout.
-// Task 4 replaces this with instanced billboards, picking and proper views.
-const BASE = import.meta.env.BASE_URL;
-const SCALE = 10;
+const stage = new Stage(document.getElementById('scene'));
 
-const canvas = document.getElementById('scene');
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
-camera.position.set(0, 3, 24);
-const controls = new OrbitControls(camera, canvas);
-controls.enableDamping = true;
-controls.autoRotate = true;
-controls.autoRotateSpeed = 0.4;
-
-function resize() {
-  renderer.setSize(innerWidth, innerHeight, false);
-  camera.aspect = innerWidth / innerHeight;
-  camera.updateProjectionMatrix();
-  material.uniforms.uViewportH.value = innerHeight * renderer.getPixelRatio();
+// Home view: far enough back that the whole galaxy fits the narrower screen axis
+const HOME = { target: new THREE.Vector3(0, 0, 0), position: new THREE.Vector3() };
+function updateHome() {
+  const halfTan = Math.tan(THREE.MathUtils.degToRad(stage.camera.fov / 2));
+  const dist = Math.max(30, 12 / (halfTan * Math.min(1, stage.camera.aspect)));
+  HOME.position.set(0, dist * 0.13, dist);
+  stage.scene.fog.density = 0.55 / dist; // same depth fade however far back we start
 }
-
-const [pokemon, meta, atlas] = await Promise.all([
-  fetch(`${BASE}data/pokemon.json`).then((r) => r.json()),
-  fetch(`${BASE}data/meta.json`).then((r) => r.json()),
-  new THREE.TextureLoader().loadAsync(`${BASE}data/atlas.png`),
-]);
-atlas.magFilter = THREE.NearestFilter; // keep pixel art crisp
-atlas.minFilter = THREE.LinearFilter;
-atlas.generateMipmaps = false;
-atlas.colorSpace = THREE.SRGBColorSpace;
-
-const n = pokemon.length;
-const posUmap = new Float32Array(n * 3);
-const posPca = new Float32Array(n * 3);
-const cell = new Float32Array(n);
-const size = new Float32Array(n);
-pokemon.forEach((p, i) => {
-  posUmap.set(p.umap.map((v) => v * SCALE), i * 3);
-  posPca.set(p.pca.map((v) => v * SCALE), i * 3);
-  cell[i] = p.atlas;
-  size[i] = 0.5 + ((p.bst - 175) / (720 - 175)) * 1.0; // BST drives sprite size
-});
-
-const geo = new THREE.BufferGeometry();
-geo.setAttribute('position', new THREE.BufferAttribute(posUmap, 3));
-geo.setAttribute('positionB', new THREE.BufferAttribute(posPca, 3));
-geo.setAttribute('cell', new THREE.BufferAttribute(cell, 1));
-geo.setAttribute('size', new THREE.BufferAttribute(size, 1));
-
-const material = new THREE.ShaderMaterial({
-  transparent: true,
-  uniforms: {
-    uAtlas: { value: atlas },
-    uGrid: { value: new THREE.Vector2(meta.atlas.cols, meta.atlas.rows) },
-    uMix: { value: 0 },
-    uViewportH: { value: 1 },
-  },
-  vertexShader: /* glsl */ `
-    attribute vec3 positionB;
-    attribute float cell;
-    attribute float size;
-    uniform float uMix;
-    uniform float uViewportH;
-    varying float vCell;
-    void main() {
-      vec3 p = mix(position, positionB, uMix);
-      vec4 mv = modelViewMatrix * vec4(p, 1.0);
-      gl_Position = projectionMatrix * mv;
-      // world-space size -> pixels, so sprites shrink with distance
-      gl_PointSize = size * uViewportH * projectionMatrix[1][1] / (-mv.z) * 0.5;
-      vCell = cell;
-    }`,
-  fragmentShader: /* glsl */ `
-    uniform sampler2D uAtlas;
-    uniform vec2 uGrid;
-    varying float vCell;
-    void main() {
-      float col = mod(vCell, uGrid.x);
-      float row = floor(vCell / uGrid.x);
-      vec2 uv = vec2((col + gl_PointCoord.x) / uGrid.x, 1.0 - (row + gl_PointCoord.y) / uGrid.y);
-      vec4 c = texture2D(uAtlas, uv);
-      if (c.a < 0.5) discard;
-      gl_FragColor = vec4(c.rgb, 1.0);
-      #include <colorspace_fragment>
-    }`,
-});
-scene.add(new THREE.Points(geo, material));
-
-addEventListener('resize', resize);
-resize();
-
-let target = 0;
-addEventListener('keydown', (e) => {
-  if (e.key.toLowerCase() === 'l') target = 1 - target;
+updateHome();
+stage.camera.position.copy(HOME.position);
+addEventListener('resize', () => {
+  const idle = stage.controls.autoRotate;
+  updateHome();
+  if (idle) stage.camera.position.setLength(HOME.position.length());
 });
 const status = document.getElementById('status');
-const label = () => (target ? 'PCA: x = overall power, y = fast/special vs bulky' : 'UMAP: clustered by stat role');
-status.textContent = `${n} Pokémon · ${label()} · press L to switch`;
 
-renderer.setAnimationLoop(() => {
-  const m = material.uniforms.uMix;
-  m.value += (target - m.value) * 0.06;
-  status.textContent = `${n} Pokémon · ${label()} · press L to switch`;
-  controls.update();
-  renderer.render(scene, camera);
+let data;
+try {
+  data = await loadData(stage.renderer);
+} catch (err) {
+  status.textContent = 'Could not load the Pokémon data. Please refresh to try again.';
+  throw err;
+}
+const { pokemon, meta, games, atlas } = data;
+status.textContent = `${pokemon.length.toLocaleString()} Pokémon · 9 generations · 1996–2024`;
+document.body.classList.add('ready');
+
+// ---------- Backdrop: faint starfield far outside the data
+{
+  const n = 1500, pos = new Float32Array(n * 3), v = new THREE.Vector3();
+  for (let i = 0; i < n; i++) pos.set(v.randomDirection().multiplyScalar(120 + Math.random() * 120).toArray(), i * 3);
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  stage.scene.add(new THREE.Points(g, new THREE.PointsMaterial({
+    color: 0x8890b0, size: 0.6, sizeAttenuation: true, fog: false, transparent: true, opacity: 0.6,
+  })));
+}
+
+// ---------- Sprites
+const field = new SpriteField(pokemon, meta, atlas);
+stage.scene.add(field.mesh);
+stage.onFrame((dt, t) => field.update(dt, t));
+
+// Generations sweep in, in order, whenever the layout changes
+const genDelays = Float32Array.from(pokemon, (p) => ((p.generation - 1) / 8) * 0.85 + Math.random() * 0.15);
+
+// ---------- Hover, select, focus
+const picker = new Picker(stage, field);
+let selected = -1;
+
+function select(i) {
+  selected = i;
+  field.uniforms.uSelected.value = i;
+  overlay.showFocus(i >= 0 ? pokemon[i] : null);
+  if (i < 0) { stage.flyTo(HOME.target, HOME.position); return; }
+  const target = field.positionOf(i);
+  // keep the current viewing direction, move in close
+  const dir = stage.camera.position.clone().sub(stage.controls.target).normalize();
+  // On narrow screens the card sits at the bottom, so aim below the sprite to
+  // frame it in the upper half of the screen
+  if (innerWidth <= 640) target.y -= 2.4;
+  stage.flyTo(target, target.clone().addScaledVector(dir, 11));
+}
+
+// ---------- Layouts
+const overlay = new Overlay({ games, layouts: LAYOUTS, onLayout: (k) => setLayout(k) });
+function setLayout(key) {
+  if (selected >= 0) select(-1);
+  field.morphTo(LAYOUTS[key].build(pokemon), { delays: genDelays });
+  overlay.setLayout(key);
+}
+
+stage.onFrame(() => {
+  const i = picker.hovered();
+  field.uniforms.uHover.value = i;
+  const p = picker.pointer;
+  overlay.showTooltip(i >= 0 && i !== selected ? pokemon[i] : null, p?.x, p?.y);
+  stage.renderer.domElement.style.cursor = i >= 0 ? 'pointer' : '';
 });
+
+// Click (not drag) selects; clicking empty space goes back
+const canvas = stage.renderer.domElement;
+let down = null;
+canvas.addEventListener('pointerdown', (e) => { down = { x: e.clientX, y: e.clientY }; });
+canvas.addEventListener('pointerup', (e) => {
+  if (!down || Math.hypot(e.clientX - down.x, e.clientY - down.y) > 6) return;
+  const coarse = e.pointerType === 'touch' || matchMedia('(pointer: coarse)').matches;
+  const i = picker.pick(e.clientX, e.clientY, coarse ? 18 : 0);
+  if (i >= 0) select(i);
+  else if (selected >= 0) select(-1);
+});
+addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && selected >= 0) select(-1);
+  if (e.key === '1') setLayout('role');
+  if (e.key === '2') setLayout('power');
+});
+
+// Intro: sprites fly out from the centre, generation by generation
+field.setLayout(new Float32Array(pokemon.length * 3));
+field.morphTo(LAYOUTS.role.build(pokemon), { duration: 2.4, stagger: 0.6, delays: genDelays });
+overlay.setLayout('role');

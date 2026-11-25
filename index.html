@@ -4,14 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Power Creep</title>
+    <meta name="description" content="Are newer Pokémon stronger? An interactive 3D look at 1,025 Pokémon across nine generations." />
     <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
-    <canvas id="scene"></canvas>
-    <div id="hud">
+    <canvas id="scene" aria-label="3D map of every Pokémon"></canvas>
+
+    <header id="hud">
       <h1>Power Creep</h1>
       <p id="status">Loading Pokémon…</p>
-    </div>
+    </header>
+
+    <nav id="layout-panel" aria-label="Layout">
+      <div id="layout-bar" role="group"></div>
+      <p id="layout-hint"></p>
+    </nav>
+
+    <div id="tooltip" class="card" hidden></div>
+    <aside id="focus-card" class="card" hidden></aside>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
