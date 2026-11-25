@@ -64,7 +64,7 @@ export class Guides {
         handle.nums = inner.querySelector('.nums');
         handle.labelEl = inner;
         const obj = new CSS2DObject(el);
-        obj.position.set(g.x, g.y ?? baseY, g.z);
+        obj.position.set(g.x, g.y ?? baseY, 0);
         group.add(obj);
         labels.push(el);
       }
@@ -72,19 +72,19 @@ export class Guides {
         // heat tile behind a matrix cell, coloured by the cell's average BST
         const mat = new THREE.MeshBasicMaterial({ color: EMPTY, transparent: true, opacity: 0, depthWrite: false, fog: false });
         const tile = new THREE.Mesh(new THREE.PlaneGeometry(g.tile * 0.94, g.tile * 0.94), mat);
-        tile.position.set(g.x, g.y, g.z - 0.05);
+        tile.position.set(g.x, g.y, -0.3);
         group.add(tile);
         materials.push(mat);
         handle.tile = mat;
       } else if (g.members && !g.labelOnly) {
-        const r = g.radius;
+        // average marker: a gold line across the column (vertical when sideways)
         const mat = new THREE.MeshBasicMaterial({
           color: GOLD, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false, fog: false,
         });
         mat.userData.target = 0.9;
-        const ring = new THREE.Mesh(new THREE.RingGeometry(r, r + 0.1, 64), mat);
-        if (horizontal) ring.rotation.y = Math.PI / 2; // sideways pillar: ring stands upright
-        else ring.rotation.x = -Math.PI / 2;
+        const ring = new THREE.Mesh(new THREE.PlaneGeometry(g.radius * 2 + 0.6, 0.09), mat);
+        if (horizontal) ring.rotation.z = Math.PI / 2;
+        ring.renderOrder = 2; // drawn over the sprites so the average is always visible
         group.add(ring);
         materials.push(mat);
         handle.ring = ring;
@@ -101,8 +101,8 @@ export class Guides {
         const mat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false });
         mat.userData.target = bst === 600 ? 0.16 : 0.08;
         const ends = horizontal
-          ? [new THREE.Vector3(v, cy - half, 0), new THREE.Vector3(v, cy + half, 0)]
-          : [new THREE.Vector3(-half, v, 0), new THREE.Vector3(half, v, 0)];
+          ? [new THREE.Vector3(v, cy - half, -0.4), new THREE.Vector3(v, cy + half, -0.4)]
+          : [new THREE.Vector3(-half, v, -0.4), new THREE.Vector3(half, v, -0.4)];
         group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(ends), mat));
         materials.push(mat);
         const el = document.createElement('div');
@@ -136,8 +136,8 @@ export class Guides {
       }
       if (h.ring) {
         const v = mean == null ? 0 : bstToY(mean);
-        if (h.horizontal) h.ring.position.set(v, g.y, g.z);
-        else h.ring.position.set(g.x, v, g.z);
+        if (h.horizontal) h.ring.position.set(v, g.y, 1);
+        else h.ring.position.set(g.x, v, 1);
         h.ring.visible = n > 0;
       }
       if (h.tile) {

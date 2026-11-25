@@ -75,8 +75,8 @@ export class Overlay {
     this.focus.hidden = !p;
     if (p) {
       const touch = matchMedia('(pointer: coarse)').matches;
-      this.focus.innerHTML = pokemonCard(p, this.gameName[p.debutGame]) +
-        `<div class="close-hint">${touch ? 'Tap empty space' : 'Esc or click empty space'} to go back</div>`;
+      this.focus.querySelector(".focus-body").innerHTML = pokemonCard(p, this.gameName[p.debutGame]) +
+        `<div class="close-hint">Drag the model to turn it · ${touch ? 'tap empty space' : 'Esc'} to close</div>`;
     }
   }
 }

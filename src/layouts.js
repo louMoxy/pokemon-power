@@ -1,21 +1,26 @@
 // Layouts. Each build(pokemon, ctx) returns the layout for the Pokémon that pass the
 // filters (ctx.visible: 0/1 mask, or null for all). Hidden Pokémon get no slot, so
 // groups re-pack around what is left and empty groups disappear. Returns:
-//   positions: Float32Array xyz per Pokémon
-//   groups?:   [{ label, sub, color, x, z, radius, count, mean }] for labels / mean rings
-//   frame?:    { center: [x,y,z], size: [w,h,d], view: 'front' | 'high' } for the camera
+//   positions: Float32Array xyz per Pokémon (a flat chart: z only orders overlaps)
+//   groups?:   [{ label, sub, color, x, y, members, radius }] for labels / average lines
+//   frame?:    { center: [x,y,z], size: [w,h,d] } for the camera (galaxies fit to bounds)
 //   axis?:     true to draw BST reference lines
-// "Galaxy" layouts are free-floating clouds; "Group by" layouts stand every category
-// up as a pillar where height = BST (a 3D violin: wide where many share a BST).
+// "Galaxy" layouts are 2D scatter plots; "Group by" layouts give every category a
+// column where height = BST, laid out as a strip plot: each BST band is a row of
+// sprites, so a column is wide wherever many Pokémon share that power level.
 import { TYPE_COLORS } from './data.js';
 
 const SPREAD = 12;
 export const bstToY = (bst) => (bst - 450) / 22;
-const BIN = 10; // BST per disc layer
-const DISC = 0.5; // sunflower spacing within a layer
-const GAP = 1.6; // space between pillars
+const BIN = 12; // BST per strip row
+const STEP = 0.55; // horizontal spacing of sprites in a row
+const MAX_HALF = 4.2; // rows wider than this wrap onto a slightly raised second row
+const GAP = 1.6; // space between columns
 const MIN_SLOT = 5.2; // narrowest pillar slot, so labels don't collide
 const GOLDEN = Math.PI * (3 - Math.sqrt(5));
+// Draw order for overlapping sprites: stronger Pokémon sit in front. The tiny per-slot
+// step stops sprites at the same BST from z-fighting.
+const zOf = (p, k = 0) => ((p.bst - 175) / 545) * 0.6 + (k % 97) * 0.0005;
 
 const TYPE_ORDER = ['normal', 'fire', 'water', 'grass', 'electric', 'ice', 'fighting', 'poison', 'ground',
   'flying', 'psychic', 'bug', 'rock', 'ghost', 'dragon', 'dark', 'steel', 'fairy'];
@@ -25,7 +30,7 @@ const cap = (s) => s[0].toUpperCase() + s.slice(1);
 export const CATEGORIES = {
   generation: {
     label: 'Generation',
-    hint: 'One pillar per generation. Height = base stat total; gold ring = average.',
+    hint: 'One pillar per generation. Height = base stat total; gold line = average.',
     key: (p) => p.generation,
     order: (ctx) => [1, 2, 3, 4, 5, 6, 7, 8, 9].map((g) => {
       const game = ctx.games.find((x) => x.gen === g && x.kind === 'base');
@@ -34,7 +39,7 @@ export const CATEGORIES = {
   },
   type: {
     label: 'Type',
-    hint: 'Grouped by primary type. Height = base stat total; gold ring = average.',
+    hint: 'Grouped by primary type. Height = base stat total; gold line = average.',
     key: (p) => p.types[0],
     order: () => TYPE_ORDER.map((t) => ({ id: t, label: cap(t), color: TYPE_COLORS[t] })),
   },
@@ -88,13 +93,13 @@ export const LAYOUTS = {
     section: 'Galaxy',
     label: 'Role map',
     hint: 'Clustered by the shape of each stat spread (UMAP). Size = base stat total.',
-    build: (pokemon) => ({ positions: fromField(pokemon, 'umap') }),
+    build: (pokemon) => ({ positions: fromField(pokemon, (p) => p.umap2) }),
   },
   power: {
     section: 'Galaxy',
     label: 'Power map',
     hint: 'PCA of the six stats. Left → right: overall power. Up: fast & special, down: bulky.',
-    build: (pokemon) => ({ positions: fromField(pokemon, 'pca'), frame: { center: [0, 0, 0], size: [26, 20, 0], view: 'front' } }),
+    build: (pokemon) => ({ positions: fromField(pokemon, (p) => [p.pca[0], p.pca[1]]) }),
   },
   ...Object.fromEntries(Object.entries(CATEGORIES).map(([id, cat]) => [id, {
     section: 'Group by',
@@ -105,7 +110,7 @@ export const LAYOUTS = {
   typeGen: {
     section: 'Group by',
     label: 'Type × Gen',
-    hint: 'Each cell is one type in one generation. Tile colour = average BST (dark → gold). Rotate to see power as depth.',
+    hint: 'Each cell is one type in one generation. Tile colour = average BST (dark → gold).',
     // portrait screens get the transposed matrix (types down the side)
     build: (pokemon, ctx) => (ctx.portrait
       ? grid(pokemon, CATEGORIES.generation, CATEGORIES.type, ctx)
@@ -113,14 +118,15 @@ export const LAYOUTS = {
   },
 };
 
-function fromField(pokemon, field) {
+function fromField(pokemon, xy) {
   const out = new Float32Array(pokemon.length * 3);
-  pokemon.forEach((p, i) => out.set(p[field].map((v) => v * SPREAD), i * 3));
+  pokemon.forEach((p, i) => { const [x, y] = xy(p); out.set([x * SPREAD, y * SPREAD, zOf(p, i)], i * 3); });
   return out;
 }
 
-// Lay out one pillar's members around (0,0): layers by BST bin, sunflower disc per layer.
-// Returns local offsets per member index plus the pillar radius.
+// Lay out one column's members around x = 0 as a strip plot: one row per BST band,
+// centred; very full rows wrap onto a slightly raised, half-step-shifted second row.
+// Returns local offsets per member index plus the column's half width.
 function pillar(members, pokemon) {
   const bins = new Map();
   for (const i of members) {
@@ -128,16 +134,17 @@ function pillar(members, pokemon) {
     if (!bins.has(b)) bins.set(b, []);
     bins.get(b).push(i);
   }
+  const perRow = Math.floor((2 * MAX_HALF) / STEP) + 1;
   const local = new Map();
   let radius = 0.6;
-  for (const [b, list] of bins) {
+  for (const list of bins.values()) {
     list.sort((a, c) => pokemon[a].id - pokemon[c].id);
-    const twist = b * 0.9; // rotate each layer so layers don't line up in columns
     list.forEach((i, k) => {
-      const r = k === 0 ? 0 : DISC * Math.sqrt(k + 0.5);
-      const a = k * GOLDEN + twist;
-      local.set(i, [Math.cos(a) * r, bstToY(pokemon[i].bst), Math.sin(a) * r]);
-      radius = Math.max(radius, r + 0.5);
+      const row = Math.floor(k / perRow), slot = k % perRow;
+      const inRow = Math.min(perRow, list.length - row * perRow);
+      const x = (slot - (inRow - 1) / 2) * STEP + (row % 2) * STEP * 0.5;
+      local.set(i, [x, bstToY(pokemon[i].bst) + row * 0.22, zOf(pokemon[i], k)]);
+      radius = Math.max(radius, Math.abs(x) + 0.5);
     });
   }
   return { local, radius };
@@ -157,7 +164,7 @@ function pillars(pokemon, cat, ctx) {
   const positions = new Float32Array(pokemon.length * 3);
   const groups = groupMembers(pokemon, cat, ctx).map((g) => ({ ...g, ...pillar(g.members, pokemon) }));
   if (!groups.length) {
-    return { positions, groups: [], frame: { center: [0, bstToY(450), 0], size: [20, 20, 0], view: 'front' } };
+    return { positions, groups: [], frame: { center: [0, bstToY(450), 0], size: [20, 20, 0] } };
   }
   // place pillars left to right, each as wide as it needs but never narrower than its
   // label; with many groups the labels alternate between two rows instead
@@ -180,7 +187,7 @@ function pillars(pokemon, cat, ctx) {
   const maxR = Math.max(...groups.map((g) => g.radius));
   return {
     positions, groups, axis: true,
-    frame: { center: [0, bstToY(450), 0], size: [width, bstToY(720) - bstToY(175), maxR * 2], view: 'front' },
+    frame: { center: [0, bstToY(450), 0], size: [width, bstToY(720) - bstToY(175), maxR * 2] },
   };
 }
 
@@ -202,15 +209,13 @@ function sideways(layout) {
   return {
     ...layout,
     horizontal: true,
-    frame: { center: [c[1] - 4, c[0], c[2]], size: [h + 12, w + 8, d], view: 'flat' },
+    frame: { center: [c[1] - 4, c[0], c[2]], size: [h + 12, w + 8, d] },
   };
 }
 
-// Matrix facing the camera: one cell per (column, row) category pair. Sprites pack into
-// a disc inside their cell, strongest in the middle, and stand out of the wall towards
-// the camera in proportion to BST (rotate to see the relief). Each cell gets a heat tile
-// coloured by its average BST.
-const RELIEF = 0.35; // z per bstToY unit
+// Matrix: one cell per (column, row) category pair. Sprites pack into a disc inside
+// their cell, strongest in the middle. Each cell gets a heat tile coloured by its
+// average BST.
 function grid(pokemon, colCat, rowCat, ctx) {
   const positions = new Float32Array(pokemon.length * 3);
   const cols = colCat.order(ctx), rows = rowCat.order(ctx);
@@ -234,7 +239,7 @@ function grid(pokemon, colCat, rowCat, ctx) {
     [...members].sort((a, b) => pokemon[b].bst - pokemon[a].bst).forEach((i, k) => {
       const rad = CELL_DISC * Math.sqrt(k);
       const a = k * GOLDEN;
-      positions.set([x + Math.cos(a) * rad, y + Math.sin(a) * rad, (bstToY(pokemon[i].bst) - bstToY(175)) * RELIEF], i * 3);
+      positions.set([x + Math.cos(a) * rad, y + Math.sin(a) * rad, zOf(pokemon[i], k)], i * 3);
     });
     groups.push({ x, y, z: 0, tile: step, members });
   }));
@@ -250,6 +255,6 @@ function grid(pokemon, colCat, rowCat, ctx) {
   }));
   return {
     positions, groups, heat: true,
-    frame: { center: [0, step * 0.4, 0], size: [w + step * 3, h + step * 2.2, 0], view: 'flat' },
+    frame: { center: [0, step * 0.4, 0], size: [w + step * 3, h + step * 2.2, 0] },
   };
 }

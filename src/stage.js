@@ -8,23 +8,30 @@ export class Stage {
   constructor(canvas) {
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
     this.renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-    // HTML labels positioned in 3D (group names, axis ticks). Click-through.
+    // HTML labels positioned in the scene (group names, axis ticks). Click-through.
     this.labels = new CSS2DRenderer();
     this.labels.domElement.id = 'labels';
     canvas.after(this.labels.domElement);
     this.scene = new THREE.Scene();
-    this.scene.fog = new THREE.FogExp2(0x0b0d14, 0.018); // depth cue: far sprites fade
+    // Flat charts need no depth fade; the fog object stays because the sprite shader
+    // includes three.js's fog chunks.
+    this.scene.fog = new THREE.FogExp2(0x0b0d14, 0);
     this.camera = new THREE.PerspectiveCamera(45, 1, 0.1, 500);
-    this.camera.position.set(0, 4, 30);
+    this.camera.position.set(0, 0, 30);
+
+    // Flat charts: drag to pan, wheel / pinch to zoom towards the cursor. No orbiting.
     this.controls = new OrbitControls(this.camera, canvas);
     this.controls.enableDamping = true;
-    this.controls.dampingFactor = 0.08;
+    this.controls.dampingFactor = 0.1;
+    this.controls.enableRotate = false;
+    this.controls.screenSpacePanning = true;
+    this.controls.zoomToCursor = true;
+    this.controls.mouseButtons = { LEFT: THREE.MOUSE.PAN, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.PAN };
+    this.controls.touches = { ONE: THREE.TOUCH.PAN, TWO: THREE.TOUCH.DOLLY_PAN };
     this.controls.minDistance = 2;
     this.controls.maxDistance = 100;
-    this.controls.autoRotate = true;
-    this.controls.autoRotateSpeed = 0.35;
-    // Stop idling rotation as soon as the user touches the scene
-    this.controls.addEventListener('start', () => { this.controls.autoRotate = false; });
+    // user input cancels any camera flight in progress
+    this.controls.addEventListener('start', () => { this.cameraTween = null; });
 
     this.callbacks = [];
     this.clock = new THREE.Clock();
@@ -33,8 +40,6 @@ export class Stage {
     this.resize();
     this.renderer.setAnimationLoop(() => this.tick());
   }
-
-  get viewportHeight() { return this.renderer.domElement.clientHeight; }
 
   onFrame(fn) { this.callbacks.push(fn); }
 
@@ -46,9 +51,8 @@ export class Stage {
     this.camera.updateProjectionMatrix();
   }
 
-  // Smoothly move the camera and orbit target. Interrupted by user input.
+  // Smoothly move the camera and its target. Interrupted by user input.
   flyTo(target, position, duration = 1.2) {
-    this.controls.autoRotate = false;
     this.cameraTween = {
       t: 0, duration,
       fromTarget: this.controls.target.clone(), toTarget: target.clone(),

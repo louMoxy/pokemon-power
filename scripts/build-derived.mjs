@@ -1,6 +1,7 @@
 // Adds derived fields to public/data/pokemon.json and builds the sprite atlas.
 //   pca:   [x,y,z]  PCA of z-scored base stats (PC1 ~ overall power)
 //   umap:  [x,y,z]  UMAP of stat proportions (stat / BST) -> clusters by role, not power
+//   umap2: [x,y]    the same in 2D, for the flat chart views
 //   atlas: index of the sprite cell in public/data/atlas.png
 //   color: dominant sprite colour as "#rrggbb"
 // Also writes public/data/meta.json (atlas layout, PCA loadings, explained variance).
@@ -80,6 +81,9 @@ const P = X.map((r) => { const t = r.reduce((a, b) => a + b, 0); return r.map((x
 console.log('Running UMAP…');
 const umap = new UMAP({ nComponents: 3, nNeighbors: 20, minDist: 0.15, random: mulberry32(151) });
 const U = umap.fit(P);
+// 2D version for the flat chart views (a 3D layout squashed flat loses its structure)
+const umap2 = new UMAP({ nComponents: 2, nNeighbors: 20, minDist: 0.2, random: mulberry32(152) });
+const U2 = umap2.fit(P);
 
 // Centre each layout on the origin and scale it so its largest extent is +-1
 function normalise(points) {
@@ -93,6 +97,7 @@ function normalise(points) {
 }
 const pcaN = normalise(pca);
 const umapN = normalise(U);
+const umap2N = normalise(U2);
 
 // ---------- Sprites: download, trim, centre into atlas cells, dominant colour
 await fs.mkdir(SPRITE_CACHE, { recursive: true });
@@ -181,6 +186,7 @@ data.forEach((p, i) => {
   Object.assign(p, releases[i]);
   p.pca = pcaN[i];
   p.umap = umapN[i];
+  p.umap2 = umap2N[i];
   p.atlas = i;
   p.spriteSize = bounds[i]; // trimmed sprite size in px, for scaling quads to real size
   p.color = colours[i];

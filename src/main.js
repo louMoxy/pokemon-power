@@ -7,6 +7,7 @@ import { Overlay } from './ui.js';
 import { LAYOUTS } from './layouts.js';
 import { Guides } from './guides.js';
 import { Filters } from './filters.js';
+import { VoxelViewer } from './voxel.js';
 
 const stage = new Stage(document.getElementById('scene'));
 const status = document.getElementById('status');
@@ -45,47 +46,42 @@ stage.onFrame((dt, t) => { field.update(dt, t); guides.update(dt); });
 const genDelays = Float32Array.from(pokemon, (p) => ((p.generation - 1) / 8) * 0.85 + Math.random() * 0.15);
 
 // ---------- Camera views
-// Each layout gets a "home" view; selecting a Pokémon flies in, deselecting flies back.
-const view = { target: new THREE.Vector3(), position: new THREE.Vector3(), orbit: true };
-const VIEW_DIRS = {
-  front: new THREE.Vector3(0, 0.12, 1).normalize(),
-  flat: new THREE.Vector3(0, 0, 1),
-  high: new THREE.Vector3(0, 0.95, 1).normalize(),
-};
+// Every view is a flat chart seen straight on. Each layout gets a "home" view that fits
+// it to the screen; selecting a Pokémon flies in, deselecting flies back.
+const view = { target: new THREE.Vector3(), position: new THREE.Vector3() };
+
+// The box to fit: the layout's own frame, or the bounds of the visible sprites
+function frameOf(layout) {
+  if (layout.frame) return layout.frame;
+  let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+  const p = layout.positions;
+  for (let i = 0; i < pokemon.length; i++) {
+    if (ctx.visible && !ctx.visible[i]) continue;
+    x0 = Math.min(x0, p[i * 3]); x1 = Math.max(x1, p[i * 3]);
+    y0 = Math.min(y0, p[i * 3 + 1]); y1 = Math.max(y1, p[i * 3 + 1]);
+  }
+  if (x0 === Infinity) return { center: [0, 0, 0], size: [20, 20, 0] };
+  return { center: [(x0 + x1) / 2, (y0 + y1) / 2, 0], size: [x1 - x0, y1 - y0, 0] };
+}
 
 function computeView(layout) {
   const halfTan = Math.tan(THREE.MathUtils.degToRad(stage.camera.fov / 2));
   const aspect = stage.camera.aspect;
-  if (!layout.frame) {
-    // free galaxy: far enough back that it fits the narrower screen axis
-    const dist = Math.max(30, 12 / (halfTan * Math.min(1, aspect)));
-    view.target.set(0, 0, 0);
-    view.position.set(0, dist * 0.13, dist);
-    view.orbit = true;
-  } else {
-    const { center, size: [w, h, d], view: kind } = layout.frame;
-    const dir = VIEW_DIRS[kind];
-    // the screen-space height of the box as seen from this direction
-    const seenH = kind === 'high' ? h * 0.75 + d * 0.7 : h;
-    // margins leave room for the BST axis labels (left) and group labels (below)
-    // only ~72% of the screen height is free: the title sits on top, the layout bar below
-    const fitW = (w / 2 + 5.5) / (halfTan * aspect), fitH = (seenH / 2 + 3) / (halfTan * 0.72);
-    const dist = Math.max(fitW, fitH) + (kind === 'high' ? d * 0.2 : d / 2);
-    view.target.set(...center);
-    view.position.copy(view.target).addScaledVector(dir, dist);
-    view.orbit = false;
-  }
-  const dist = view.position.distanceTo(view.target);
-  stage.controls.maxDistance = Math.max(100, dist * 1.6);
+  const { center, size: [w, h] } = frameOf(layout);
+  // margins leave room for the BST axis labels (left) and group labels (below);
+  // only ~72% of the screen height is free: the title sits on top, the layout bar below
+  const fitW = (w / 2 + 5.5) / (halfTan * aspect), fitH = (h / 2 + 3) / (halfTan * 0.72);
+  const dist = Math.max(fitW, fitH, 8);
+  view.target.set(...center);
+  view.position.set(center[0], center[1], dist);
+  stage.controls.maxDistance = Math.max(60, dist * 2);
   return dist;
 }
 
 function goHome(animate = true) {
-  const dist = computeView(currentLayout);
-  stage.scene.fog.density = (currentLayout.frame?.view === 'high' ? 0.3 : 0.55) / dist;
-  if (animate) stage.flyTo(view.target, view.position, 1.4);
+  computeView(currentLayout);
+  if (animate) stage.flyTo(view.target, view.position, 1.2);
   else { stage.controls.target.copy(view.target); stage.camera.position.copy(view.position); }
-  stage.controls.autoRotate = view.orbit;
 }
 
 // ---------- Filters: hide everything that doesn't match and rebuild the layout around
@@ -118,6 +114,7 @@ filters.search.addEventListener('keydown', (e) => {
 });
 
 // ---------- Hover, select, focus
+const voxels = new VoxelViewer(document.getElementById('voxel'), atlas.image, meta);
 const picker = new Picker(stage, field);
 let selected = -1;
 
@@ -125,7 +122,8 @@ function select(i) {
   selected = i;
   field.uniforms.uSelected.value = i;
   overlay.showFocus(i >= 0 ? pokemon[i] : null);
-  if (i < 0) { goHome(); return; }
+  if (i < 0) { voxels.hide(); goHome(); return; }
+  voxels.show(pokemon[i]);
   // aim at where the sprite is heading (it may still be animating into place)
   const target = new THREE.Vector3().fromArray(currentLayout.positions, i * 3);
   // keep the current viewing direction, move in close
@@ -133,7 +131,7 @@ function select(i) {
   // On narrow screens the card sits at the bottom, so aim below the sprite to
   // frame it in the upper half of the screen
   if (innerWidth <= 640) target.y -= 2.4;
-  stage.flyTo(target, target.clone().addScaledVector(dir, 11));
+  stage.flyTo(target, target.clone().addScaledVector(dir, 16));
 }
 
 // ---------- Layouts
@@ -144,7 +142,7 @@ function setLayout(key, { intro = false, fromFilter = false } = {}) {
   currentLayout = LAYOUTS[key].build(pokemon, ctx);
   // a filter change keeps the selection if it is still visible
   const keepSelection = fromFilter && selected >= 0 && (!ctx.visible || ctx.visible[selected]);
-  if (selected >= 0 && !keepSelection) { selected = -1; field.uniforms.uSelected.value = -1; overlay.showFocus(null); }
+  if (selected >= 0 && !keepSelection) { selected = -1; field.uniforms.uSelected.value = -1; overlay.showFocus(null); voxels.hide(); }
   if (intro) field.setLayout(new Float32Array(pokemon.length * 3));
   field.morphTo(currentLayout.positions, {
     visible: ctx.visible,
