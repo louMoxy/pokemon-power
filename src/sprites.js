@@ -161,6 +161,14 @@ export class SpriteField {
     );
   }
 
+  // Hide every sprite at once (used before the intro, so all of them fly in).
+  hideAll() {
+    this.visFrom.fill(0);
+    this.visTo.fill(0);
+    this.uniforms.uT.value = 1;
+    this.attr.visFrom.needsUpdate = this.attr.visTo.needsUpdate = true;
+  }
+
   // Jump straight to a layout (no animation).
   setLayout(positions) {
     this.from.set(positions);
@@ -171,11 +179,20 @@ export class SpriteField {
 
   // Animate to a layout. delays: optional Float32Array in [0,1] (e.g. by generation).
   // visible: optional 0/1 mask; hidden sprites shrink away where they currently are.
-  morphTo(positions, { duration = 1.6, stagger = 0.35, delays = null, visible = null } = {}) {
+  // enterFrom: optional (i) => [x,y,z] | null. Sprites that are appearing start there at
+  // full size and fly in, instead of growing in place (story-mode entrances).
+  morphTo(positions, { duration = 1.6, stagger = 0.35, delays = null, visible = null, enterFrom = null } = {}) {
     const v = new THREE.Vector3();
     for (let i = 0; i < this.count; i++) {
       this.from.set(this.positionOf(i, v).toArray(), i * 3);
       this.visFrom[i] = this.visibility(i);
+    }
+    if (enterFrom) {
+      for (let i = 0; i < this.count; i++) {
+        const appearing = this.visFrom[i] < 0.5 && (!visible || visible[i]);
+        const start = appearing && enterFrom(i);
+        if (start) { this.from.set(start, i * 3); this.visFrom[i] = 1; }
+      }
     }
     for (let i = 0; i < this.count; i++) {
       const show = visible ? visible[i] : 1;

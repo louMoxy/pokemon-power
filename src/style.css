@@ -212,3 +212,73 @@ body.ready #filter-toggle { opacity: 1; }
   #voxel { height: 150px; }
   #focus-card .stats { grid-template-columns: 1fr 1fr; column-gap: 12px; }
 }
+.group-label.post b { color: var(--accent); }
+
+/* ---------- Story mode */
+#story, #skip-story { display: none; }
+body.story #story {
+  display: block; position: fixed; inset: 0; overflow-y: auto; overscroll-behavior: contain;
+  scroll-behavior: smooth; z-index: 5;
+}
+body.story #skip-story {
+  display: block; position: fixed; top: 18px; right: 20px; z-index: 6;
+  font: inherit; font-size: 13px; color: var(--muted); cursor: pointer;
+  padding: 7px 14px; border-radius: 999px; background: var(--panel); border: 1px solid var(--border);
+  backdrop-filter: blur(8px);
+}
+body.story #skip-story:hover { color: var(--fg); }
+/* in story mode the explorer chrome steps aside */
+body.story #hud, body.story #layout-panel, body.story #filter-panel { display: none; }
+
+.chapter { min-height: 110vh; display: flex; align-items: center; padding: 0 0 0 40px; }
+.chapter.intro { min-height: 100vh; }
+.story-end { height: 40vh; }
+.story-card {
+  width: min(400px, 40vw); padding: 22px 24px; border-radius: 16px;
+  background: var(--panel); border: 1px solid var(--border); backdrop-filter: blur(12px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  opacity: 0.35; transform: translateY(16px) scale(0.98);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.chapter.active .story-card { opacity: 1; transform: none; }
+.story-card .kicker {
+  margin: 0 0 6px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--accent);
+}
+.story-card h2 { margin: 0 0 10px; font-size: 24px; line-height: 1.2; text-wrap: balance; }
+.chapter.intro h2 { font-size: 34px; }
+.story-card p { margin: 0; font-size: 15px; line-height: 1.6; color: #c9cee0; }
+.story-card b { color: var(--fg); }
+.scroll-cue { margin-top: 18px !important; color: var(--muted) !important; font-size: 13px !important; }
+.scroll-cue span { display: inline-block; animation: bob 1.6s ease-in-out infinite; }
+@keyframes bob { 50% { transform: translateY(4px); } }
+.explore-btn {
+  margin-top: 18px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+  padding: 10px 18px; border-radius: 999px; border: 0; background: var(--accent); color: #111;
+}
+.explore-btn:focus-visible, #skip-story:focus-visible, #story-btn:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+
+#story-btn {
+  pointer-events: auto; margin: 12px 0 0 6px; font: inherit; font-size: 13px; color: var(--fg); cursor: pointer;
+  padding: 7px 12px; border-radius: 999px; background: var(--panel); border: 1px solid var(--border);
+  backdrop-filter: blur(8px); text-shadow: none;
+}
+
+@media (max-width: 760px) {
+  /* phones: cards sit in the lower part of the screen, the chart above them */
+  .chapter { padding: 0 12px; align-items: flex-end; min-height: 100vh; }
+  .chapter.intro { align-items: center; }
+  .story-card { width: 100%; margin-bottom: 6vh; padding: 16px 18px; }
+  .story-card h2 { font-size: 20px; }
+  .chapter.intro h2 { font-size: 26px; }
+  .story-card p { font-size: 14px; }
+  body.story #skip-story { top: 12px; right: 12px; padding: 6px 12px; font-size: 12px; }
+}
+body.story #story { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.15) transparent; }
+@media (max-width: 760px) {
+  /* phones: the active card stays pinned to the bottom while its chapter scrolls; the
+     chart is framed above it. Inactive cards fade out so they never cover the chart. */
+  .chapter { align-items: flex-end; }
+  .chapter:not(.intro) .story-card { position: sticky; bottom: 3vh; margin-bottom: 0; }
+  .chapter:not(.active):not(.intro) .story-card { opacity: 0; pointer-events: none; }
+}

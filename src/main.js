@@ -8,6 +8,7 @@ import { LAYOUTS } from './layouts.js';
 import { Guides } from './guides.js';
 import { Filters } from './filters.js';
 import { VoxelViewer } from './voxel.js';
+import { Story } from './story.js';
 
 const stage = new Stage(document.getElementById('scene'));
 const status = document.getElementById('status');
@@ -21,7 +22,11 @@ try {
 }
 const { pokemon, meta, games, atlas } = data;
 const isPortrait = () => innerWidth / innerHeight < 0.85;
-const ctx = { games, portrait: isPortrait() };
+const ctx = {
+  games,
+  portrait: isPortrait(),
+  launchIds: new Set(games.filter((g) => g.kind === 'base').map((g) => g.id)),
+};
 status.textContent = `${pokemon.length.toLocaleString()} Pokémon · 9 generations · 1996–2024`;
 document.body.classList.add('ready');
 
@@ -64,16 +69,31 @@ function frameOf(layout) {
   return { center: [(x0 + x1) / 2, (y0 + y1) / 2, 0], size: [x1 - x0, y1 - y0, 0] };
 }
 
+// Screen space (CSS px) covered by overlays, which the chart must fit around: the title
+// and layout bar in explore mode; the chapter cards in story mode (left column on
+// desktop, bottom sheet on phones).
+function insets() {
+  if (mode !== 'story') return { left: 0, top: 110, bottom: 130 };
+  if (innerWidth > 760) return { left: Math.min(460, innerWidth * 0.42), top: 40, bottom: 40 };
+  return { left: 0, top: 50, bottom: innerHeight * 0.46 };
+}
+
 function computeView(layout) {
   const halfTan = Math.tan(THREE.MathUtils.degToRad(stage.camera.fov / 2));
-  const aspect = stage.camera.aspect;
   const { center, size: [w, h] } = frameOf(layout);
-  // margins leave room for the BST axis labels (left) and group labels (below);
-  // only ~72% of the screen height is free: the title sits on top, the layout bar below
-  const fitW = (w / 2 + 5.5) / (halfTan * aspect), fitH = (h / 2 + 3) / (halfTan * 0.72);
+  const ins = insets();
+  const freeW = Math.max(200, innerWidth - ins.left), freeH = Math.max(200, innerHeight - ins.top - ins.bottom);
+  // distance at which the box (plus room for axis labels left and group labels below)
+  // fits the free area; world units per CSS px at distance d is 2·d·tan(fov/2) / height
+  const fitW = ((w + 11) * innerHeight) / (2 * halfTan * freeW);
+  const fitH = ((h + 6) * innerHeight) / (2 * halfTan * freeH);
   const dist = Math.max(fitW, fitH, 8);
-  view.target.set(...center);
-  view.position.set(center[0], center[1], dist);
+  const unit = (2 * dist * halfTan) / innerHeight;
+  // shift the camera so the chart is centred in the free area, not the whole screen
+  const tx = center[0] - (ins.left / 2) * unit;
+  const ty = center[1] - ((ins.bottom - ins.top) / 2) * unit;
+  view.target.set(tx, ty, 0);
+  view.position.set(tx, ty, dist);
   stage.controls.maxDistance = Math.max(60, dist * 2);
   return dist;
 }
@@ -86,11 +106,15 @@ function goHome(animate = true) {
 
 // ---------- Filters: hide everything that doesn't match and rebuild the layout around
 // what is left. Debounced so typing in the search box doesn't re-layout every keystroke.
+let mode = 'story'; // 'story' | 'explore'
 let layoutKey = 'role';
 let currentLayout = null; // set by the first setLayout() call at the bottom
 let filterTimer = null;
+let exploreVisible = null; // the filter panel's mask; story chapters set their own
 const filters = new Filters(pokemon, ctx, (mask, active) => {
-  ctx.visible = active ? mask : null;
+  exploreVisible = active ? mask : null;
+  if (mode !== 'explore') return;
+  ctx.visible = exploreVisible;
   const shown = active ? mask.reduce((a, b) => a + b, 0) : pokemon.length;
   status.textContent = active
     ? `Showing ${shown.toLocaleString()} of ${pokemon.length.toLocaleString()} Pokémon`
@@ -137,19 +161,33 @@ function select(i) {
 // ---------- Layouts
 const overlay = new Overlay({ games, layouts: LAYOUTS, onLayout: (k) => setLayout(k) });
 
-function setLayout(key, { intro = false, fromFilter = false } = {}) {
+// Where Pokémon appearing in a story chapter fly in from, relative to their new spot
+const ENTRANCES = {
+  scatter: (x, y, z) => { const a = Math.random() * Math.PI * 2, r = 45 + Math.random() * 25; return [x + Math.cos(a) * r, y + Math.sin(a) * r, z]; },
+  right: (x, y, z) => [x + 45 + Math.random() * 12, y, z],
+  left: (x, y, z) => [x - 45 - Math.random() * 12, y, z],
+  top: (x, y, z) => [x + (Math.random() - 0.5) * 4, y + 32 + Math.random() * 10, z],
+};
+
+// story: a chapter from story.js (its own visibility, entrance and trend line)
+function setLayout(key, { fromFilter = false, story = null } = {}) {
   layoutKey = key;
   currentLayout = LAYOUTS[key].build(pokemon, ctx);
+  if (story?.trend) currentLayout.trend = true;
   // a filter change keeps the selection if it is still visible
   const keepSelection = fromFilter && selected >= 0 && (!ctx.visible || ctx.visible[selected]);
   if (selected >= 0 && !keepSelection) { selected = -1; field.uniforms.uSelected.value = -1; overlay.showFocus(null); voxels.hide(); }
-  if (intro) field.setLayout(new Float32Array(pokemon.length * 3));
-  field.morphTo(currentLayout.positions, {
+  const pos = currentLayout.positions;
+  const enter = story?.enter && ENTRANCES[story.enter];
+  field.morphTo(pos, {
     visible: ctx.visible,
     delays: genDelays,
-    ...(intro ? { duration: 2.4, stagger: 0.6 } : fromFilter ? { duration: 1.1, stagger: 0.2 } : { duration: 1.6 }),
+    enterFrom: enter ? (i) => enter(pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2]) : null,
+    ...(story?.enter === 'scatter' ? { duration: 2.6, stagger: 0.6 }
+      : enter ? { duration: 2.0, stagger: 0.45 }
+      : fromFilter ? { duration: 1.1, stagger: 0.2 } : { duration: 1.6 }),
   });
-  guides.set(currentLayout, intro ? 1.8 : fromFilter ? 0.5 : 1.0);
+  guides.set(currentLayout, story?.enter === 'scatter' ? 1.8 : fromFilter ? 0.5 : 1.0);
   // sideways (portrait) pillars: BST runs left to right instead of up
   const empty = ctx.visible && !ctx.visible.some((v) => v);
   overlay.setLayout(key, empty ? 'No Pokémon match these filters.'
@@ -157,8 +195,34 @@ function setLayout(key, { intro = false, fromFilter = false } = {}) {
   if (keepSelection) return;
   // galaxies keep the camera where the user left it on a filter change;
   // grouped views re-frame to fit the groups that are left
-  if (!fromFilter || currentLayout.frame) goHome(!intro);
+  if (!fromFilter || currentLayout.frame) goHome(true);
 }
+
+// ---------- Story mode
+const story = new Story({
+  games,
+  onChapter: (ch) => {
+    ctx.visible = ch.show ? ch.show(pokemon) : null;
+    setLayout(ch.layout, { story: ch });
+  },
+  onProgress: (p) => guides.setTrendProgress(p),
+  onExplore: () => enterExplore(),
+});
+
+function enterStory() {
+  mode = 'story';
+  if (selected >= 0) select(-1);
+  filters.setOpen(false);
+  story.show();
+}
+
+function enterExplore() {
+  mode = 'explore';
+  story.hide();
+  ctx.visible = exploreVisible;
+  setLayout('generation');
+}
+document.getElementById('story-btn').addEventListener('click', enterStory);
 
 stage.onFrame(() => {
   const i = picker.hovered();
@@ -184,9 +248,10 @@ canvas.addEventListener('pointerup', (e) => {
   else if (selected >= 0) select(-1);
 });
 
-const keys = Object.keys(LAYOUTS);
+const keys = Object.keys(LAYOUTS).filter((k) => !LAYOUTS[k].hidden);
 addEventListener('keydown', (e) => {
   if (e.target.closest?.('input, textarea')) return;
+  if (mode !== 'explore') return; // story mode is driven by scrolling
   if (e.key === 'Escape') {
     if (!filters.panel.hidden) { filters.setOpen(false); return; }
     if (selected >= 0) select(-1);
@@ -200,11 +265,13 @@ addEventListener('resize', () => {
   // switching between portrait and landscape rebuilds grouped layouts on their side
   if (isPortrait() !== ctx.portrait) {
     ctx.portrait = isPortrait();
-    setLayout(layoutKey);
+    setLayout(layoutKey, { story: mode === 'story' ? story.chapters[story.active] : null });
     return;
   }
   // otherwise re-fit the current view if the user isn't zoomed in on something
   if (selected < 0) goHome(false);
 });
 
-setLayout(layoutKey, { intro: true });
+// Start with the story: every sprite begins hidden and flies in for the intro chapter
+field.hideAll();
+enterStory();

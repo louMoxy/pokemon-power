@@ -88,6 +88,38 @@ export const CATEGORIES = {
   },
 };
 
+// Short labels for debut-game columns
+const GAME_SHORT = {
+  'red-green': 'Red & Green', 'gold-silver': 'Gold & Silver', 'ruby-sapphire': 'Ruby & Sapphire',
+  'diamond-pearl': 'Diamond & Pearl', 'black-white': 'Black & White', 'x-y': 'X & Y', 'sun-moon': 'Sun & Moon',
+  'ultra-sun-ultra-moon': 'Ultra S&M', 'lets-go': "Let's Go", 'sword-shield': 'Sword & Shield',
+  'isle-of-armor': 'Isle of Armor', 'crown-tundra': 'Crown Tundra', 'legends-arceus': 'Legends Arceus',
+  'scarlet-violet': 'Scarlet & Violet', 'sv-raid-event-2023': 'Raid event', 'teal-mask': 'Teal Mask',
+  'indigo-disk': 'Indigo Disk', 'mochi-mayhem': 'Mochi Mayhem',
+};
+CATEGORIES.debut = {
+  label: 'Debut game',
+  staggerLabels: true, // game names are long: always alternate label rows
+  hint: 'Columns in release order, one per game that introduced new Pokémon. Gold names = added after launch.',
+  key: (p) => p.debutGame,
+  order: (ctx) => ctx.games.filter((g) => g.speciesDebuted > 0).map((g) => ({
+    id: g.id, label: GAME_SHORT[g.id] ?? g.name, sub: String(g.year | 0), postLaunch: g.kind !== 'base',
+  })),
+};
+
+// Story-only: the nine launch games plus one column for everything added after launch
+CATEGORIES.release = {
+  label: 'Launch vs later',
+  hidden: true, // used by story mode, not shown in the layout bar
+  staggerLabels: true,
+  hint: 'Launch-game columns, plus one column for every species added after launch.',
+  key: (p, ctx) => (ctx.launchIds.has(p.debutGame) ? p.debutGame : 'post'),
+  order: (ctx) => [
+    ...CATEGORIES.debut.order(ctx).filter((o) => !o.postLaunch),
+    { id: 'post', label: 'After launch', sub: '2017–2024', postLaunch: true },
+  ],
+};
+
 export const LAYOUTS = {
   role: {
     section: 'Galaxy',
@@ -103,6 +135,7 @@ export const LAYOUTS = {
   },
   ...Object.fromEntries(Object.entries(CATEGORIES).map(([id, cat]) => [id, {
     section: 'Group by',
+    hidden: cat.hidden,
     label: cat.label,
     hint: cat.hint,
     build: (pokemon, ctx) => (ctx.portrait ? sideways(pillars(pokemon, cat, ctx)) : pillars(pokemon, cat, ctx)),
@@ -153,7 +186,7 @@ function pillar(members, pokemon) {
 function groupMembers(pokemon, cat, ctx) {
   const cats = cat.order(ctx);
   const byId = new Map(cats.map((c) => [c.id, []]));
-  pokemon.forEach((p, i) => { if (isVisible(ctx, i)) byId.get(cat.key(p))?.push(i); });
+  pokemon.forEach((p, i) => { if (isVisible(ctx, i)) byId.get(cat.key(p, ctx))?.push(i); });
   return cats.map((c) => ({ ...c, members: byId.get(c.id) })).filter((c) => c.members.length);
 }
 
@@ -168,8 +201,9 @@ function pillars(pokemon, cat, ctx) {
   }
   // place pillars left to right, each as wide as it needs but never narrower than its
   // label; with many groups the labels alternate between two rows instead
-  const many = groups.length > 10;
-  const minHalf = many ? 0 : MIN_SLOT / 2;
+  const many = groups.length > 10 || cat.staggerLabels;
+  // staggered labels get two slots of room each, but long names still need some width
+  const minHalf = cat.staggerLabels ? 1.9 : many ? 0 : MIN_SLOT / 2;
   let x = 0;
   for (const g of groups) {
     const half = Math.max(g.radius, minHalf);

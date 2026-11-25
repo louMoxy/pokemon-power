@@ -36,6 +36,7 @@ export class Overlay {
     this.buttons = {};
     let section = null;
     for (const [key, layout] of Object.entries(layouts)) {
+      if (layout.hidden) continue;
       if (layout.section !== section) {
         section = layout.section;
         const s = document.createElement('span');
@@ -53,7 +54,7 @@ export class Overlay {
 
   setLayout(key, hint = null) {
     for (const [k, b] of Object.entries(this.buttons)) b.setAttribute('aria-pressed', String(k === key));
-    this.buttons[key].scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+    this.buttons[key]?.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
     this.hint.textContent = hint ?? this.layouts[key].hint;
   }
 

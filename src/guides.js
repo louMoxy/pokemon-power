@@ -43,7 +43,8 @@ export class Guides {
     this.scene.add(built.group);
   }
 
-  build({ groups = [], axis, frame, horizontal = false }) {
+  build(layout) {
+    const { groups = [], axis, frame, horizontal = false } = layout;
     const group = new THREE.Group();
     const materials = [], labels = [], stats = [];
     const baseY = bstToY(175) - 1.2;
@@ -56,7 +57,7 @@ export class Guides {
         el.style.opacity = 0;
         const inner = document.createElement('div');
         inner.className = ['group-label', g.side && 'side', g.above && 'above', g.raise && 'raise',
-          g.labelOnly && 'axis', g.stagger && 'lower'].filter(Boolean).join(' ');
+          g.labelOnly && 'axis', g.stagger && 'lower', g.postLaunch && 'post'].filter(Boolean).join(' ');
         if (g.color) inner.style.setProperty('--chip', g.color);
         inner.innerHTML = `<b>${esc(g.label)}</b>` + (g.sub ? `<span>${esc(g.sub)}</span>` : '') +
           (g.members ? '<span class="nums"></span>' : '');
@@ -107,7 +108,8 @@ export class Guides {
         materials.push(mat);
         const el = document.createElement('div');
         el.style.opacity = 0;
-        el.innerHTML = `<div class="axis-label">${bst === 700 ? '700 BST' : bst}</div>`;
+        // sideways the ticks are only ~40px apart, so skip the unit there
+        el.innerHTML = `<div class="axis-label">${bst === 700 && !horizontal ? '700 BST' : bst}</div>`;
         const obj = new CSS2DObject(el);
         if (horizontal) obj.position.set(v, cy - half - 0.8, 0);
         else obj.position.set(-half - 0.6, v, 0);
@@ -115,7 +117,28 @@ export class Guides {
         labels.push(el);
       }
     }
-    return { group, materials, labels, stats, t: 0, dir: 1 };
+    // optional trend line through the group averages, revealed by setTrendProgress()
+    let trend = null;
+    if (layout.trend) {
+      const mat = new THREE.MeshBasicMaterial({ color: GOLD, transparent: true, opacity: 0, depthWrite: false, fog: false });
+      mat.userData.target = 1;
+      materials.push(mat);
+      trend = { mat, segments: [], dots: [], progress: 1 };
+      const cols = stats.filter((h) => h.ring);
+      for (let k = 0; k < cols.length; k++) {
+        const dot = new THREE.Mesh(new THREE.CircleGeometry(0.22, 24), mat);
+        dot.renderOrder = 3;
+        group.add(dot);
+        trend.dots.push({ mesh: dot, h: cols[k] });
+        if (k > 0) {
+          const seg = new THREE.Mesh(new THREE.PlaneGeometry(1, 0.11), mat);
+          seg.renderOrder = 3;
+          group.add(seg);
+          trend.segments.push({ mesh: seg, a: cols[k - 1], b: cols[k] });
+        }
+      }
+    }
+    return { group, materials, labels, stats, trend, horizontal, t: 0, dir: 1 };
   }
 
   // Recompute each group's count / average for the visible Pokémon and move rings,
@@ -147,6 +170,38 @@ export class Guides {
         if (built.t >= 1) h.tile.opacity = h.tile.userData.target;
       }
     }
+    this.layoutTrend();
+  }
+
+  // Reveal the trend line from the first group to the last (0..1), e.g. tied to scroll.
+  setTrendProgress(p) {
+    const tr = this.current?.trend;
+    if (!tr) return;
+    tr.progress = p;
+    this.layoutTrend();
+  }
+
+  layoutTrend() {
+    const b = this.current, tr = b?.trend;
+    if (!tr) return;
+    const pt = (h) => [h.ring.position.x, h.ring.position.y];
+    const n = tr.dots.length;
+    const reach = tr.progress * Math.max(1, n - 1); // how many segments are drawn
+    tr.dots.forEach((d, k) => {
+      const [x, y] = pt(d.h);
+      d.mesh.position.set(x, y, 1.2);
+      d.mesh.visible = d.h.ring.visible && k <= reach + 1e-6;
+    });
+    tr.segments.forEach((s, k) => {
+      const [ax, ay] = pt(s.a), [bx, by] = pt(s.b);
+      const f = Math.min(1, Math.max(0, reach - k)); // partial last segment
+      const len = Math.hypot(bx - ax, by - ay) * f;
+      s.mesh.visible = f > 0 && s.a.ring.visible && s.b.ring.visible;
+      s.mesh.scale.x = Math.max(len, 1e-3);
+      const ang = Math.atan2(by - ay, bx - ax);
+      s.mesh.rotation.z = ang;
+      s.mesh.position.set(ax + Math.cos(ang) * len / 2, ay + Math.sin(ang) * len / 2, 1.2);
+    });
   }
 
   fade(built, dir) {
