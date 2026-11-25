@@ -2,11 +2,16 @@
 // callbacks with stage.onFrame(fn) where fn(dt, elapsed) runs before each render.
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 
 export class Stage {
   constructor(canvas) {
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
     this.renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    // HTML labels positioned in 3D (group names, axis ticks). Click-through.
+    this.labels = new CSS2DRenderer();
+    this.labels.domElement.id = 'labels';
+    canvas.after(this.labels.domElement);
     this.scene = new THREE.Scene();
     this.scene.fog = new THREE.FogExp2(0x0b0d14, 0.018); // depth cue: far sprites fade
     this.camera = new THREE.PerspectiveCamera(45, 1, 0.1, 500);
@@ -36,6 +41,7 @@ export class Stage {
   resize() {
     const w = innerWidth, h = innerHeight;
     this.renderer.setSize(w, h, false);
+    this.labels.setSize(w, h);
     this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();
   }
@@ -63,5 +69,6 @@ export class Stage {
     for (const fn of this.callbacks) fn(dt, this.clock.elapsedTime);
     this.controls.update();
     this.renderer.render(this.scene, this.camera);
+    this.labels.render(this.scene, this.camera);
   }
 }

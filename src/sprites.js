@@ -3,8 +3,9 @@
 //   so small Pokémon look small and there is no wasted transparent fill.
 // - Positions morph between layouts on the GPU (aFrom -> aTo) with a per-instance delay;
 //   the same easing runs on the CPU so picking always matches what is on screen.
-// - Hover / selection / dimming are uniforms or a single float attribute, so they never
-//   require rebuilding geometry.
+// - Visibility (filters) morphs with the same clock: hidden sprites shrink away in place
+//   while the visible ones glide to their new layout.
+// - Hover / selection are uniforms, so they never require rebuilding geometry.
 import * as THREE from 'three';
 
 const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
@@ -26,7 +27,8 @@ export class SpriteField {
     this.from = new Float32Array(n * 3);
     this.to = new Float32Array(n * 3);
     this.delay = new Float32Array(n);
-    this.dim = new Float32Array(n);
+    this.visFrom = new Float32Array(n).fill(1);
+    this.visTo = new Float32Array(n).fill(1);
     const uvRect = new Float32Array(n * 4);
     const size = new Float32Array(n * 2);
     const scale = new Float32Array(n);
@@ -50,12 +52,14 @@ export class SpriteField {
       from: new THREE.InstancedBufferAttribute(this.from, 3),
       to: new THREE.InstancedBufferAttribute(this.to, 3),
       delay: new THREE.InstancedBufferAttribute(this.delay, 1),
-      dim: new THREE.InstancedBufferAttribute(this.dim, 1),
+      visFrom: new THREE.InstancedBufferAttribute(this.visFrom, 1),
+      visTo: new THREE.InstancedBufferAttribute(this.visTo, 1),
     };
     geo.setAttribute('aFrom', this.attr.from);
     geo.setAttribute('aTo', this.attr.to);
     geo.setAttribute('aDelay', this.attr.delay);
-    geo.setAttribute('aDim', this.attr.dim);
+    geo.setAttribute('aVisFrom', this.attr.visFrom);
+    geo.setAttribute('aVisTo', this.attr.visTo);
     geo.setAttribute('aUvRect', new THREE.InstancedBufferAttribute(uvRect, 4));
     geo.setAttribute('aSize', new THREE.InstancedBufferAttribute(size, 2));
     geo.setAttribute('aScale', new THREE.InstancedBufferAttribute(scale, 1));
@@ -79,14 +83,14 @@ export class SpriteField {
         attribute vec3 aFrom;
         attribute vec3 aTo;
         attribute float aDelay;
-        attribute float aDim;
+        attribute float aVisFrom;
+        attribute float aVisTo;
         attribute vec4 aUvRect;
         attribute vec2 aSize;
         attribute float aScale;
         attribute float aIndex;
         uniform float uT, uStagger, uHover, uSelected, uTime, uSizeMul;
         varying vec2 vUv;
-        varying float vDim;
         varying float vFocus;
         #include <fog_pars_vertex>
 
@@ -94,13 +98,15 @@ export class SpriteField {
 
         void main() {
           float t = clamp((uT - aDelay * uStagger) / max(1.0 - uStagger, 1e-4), 0.0, 1.0);
-          vec3 center = mix(aFrom, aTo, ease(t));
+          float e = ease(t);
+          vec3 center = mix(aFrom, aTo, e);
+          float vis = mix(aVisFrom, aVisTo, e);
 
           float hovered = 1.0 - step(0.5, abs(aIndex - uHover));
           float selected = 1.0 - step(0.5, abs(aIndex - uSelected));
           vFocus = max(hovered, selected);
 
-          float s = aScale * uSizeMul * (1.0 + 0.3 * vFocus) * mix(1.0, 0.75, aDim);
+          float s = aScale * uSizeMul * (1.0 + 0.3 * vFocus) * vis;
           vec4 mvPosition = modelViewMatrix * vec4(center, 1.0);
           // little hop on the hovered sprite
           mvPosition.y += hovered * abs(sin(uTime * 6.0)) * 0.12 * s;
@@ -108,21 +114,17 @@ export class SpriteField {
           gl_Position = projectionMatrix * mvPosition;
 
           vUv = mix(aUvRect.xy, aUvRect.zw, uv);
-          vDim = aDim;
           #include <fog_vertex>
         }`,
       fragmentShader: /* glsl */ `
         uniform sampler2D uMap;
         varying vec2 vUv;
-        varying float vDim;
         varying float vFocus;
         #include <fog_pars_fragment>
         void main() {
           vec4 c = texture2D(uMap, vUv);
           if (c.a < 0.5) discard;
           vec3 col = c.rgb;
-          float grey = dot(col, vec3(0.299, 0.587, 0.114));
-          col = mix(col, vec3(grey) * 0.25, vDim * 0.85);   // filtered-out: dark ghost
           col *= 1.0 + 0.25 * vFocus;
           gl_FragColor = vec4(col, 1.0);
           #include <colorspace_fragment>
@@ -133,14 +135,25 @@ export class SpriteField {
     this.mesh = new THREE.Mesh(geo, this.material);
     this.mesh.frustumCulled = false; // instances move outside the base quad's bounds
     this.anim = null;
+    this.sizeTarget = this.uniforms.uSizeMul.value;
+    this.baseSize = this.uniforms.uSizeMul.value;
+  }
+
+  // Eased morph progress of sprite i (mirrors the vertex shader).
+  progress(i) {
+    const u = this.uniforms;
+    const span = Math.max(1 - u.uStagger.value, 1e-4);
+    return easeInOutCubic(Math.min(1, Math.max(0, (u.uT.value - this.delay[i] * u.uStagger.value) / span)));
+  }
+
+  // Current visibility 0..1 of sprite i (1 = fully shown).
+  visibility(i) {
+    return this.visFrom[i] + (this.visTo[i] - this.visFrom[i]) * this.progress(i);
   }
 
   // Current on-screen position of sprite i (mirrors the vertex shader).
   positionOf(i, out = new THREE.Vector3()) {
-    const u = this.uniforms;
-    const span = Math.max(1 - u.uStagger.value, 1e-4);
-    const t = Math.min(1, Math.max(0, (u.uT.value - this.delay[i] * u.uStagger.value) / span));
-    const e = easeInOutCubic(t), k = i * 3;
+    const e = this.progress(i), k = i * 3;
     return out.set(
       this.from[k] + (this.to[k] - this.from[k]) * e,
       this.from[k + 1] + (this.to[k + 1] - this.from[k + 1]) * e,
@@ -157,22 +170,31 @@ export class SpriteField {
   }
 
   // Animate to a layout. delays: optional Float32Array in [0,1] (e.g. by generation).
-  morphTo(positions, { duration = 1.6, stagger = 0.35, delays = null } = {}) {
+  // visible: optional 0/1 mask; hidden sprites shrink away where they currently are.
+  morphTo(positions, { duration = 1.6, stagger = 0.35, delays = null, visible = null } = {}) {
     const v = new THREE.Vector3();
-    for (let i = 0; i < this.count; i++) this.from.set(this.positionOf(i, v).toArray(), i * 3);
-    this.to.set(positions);
+    for (let i = 0; i < this.count; i++) {
+      this.from.set(this.positionOf(i, v).toArray(), i * 3);
+      this.visFrom[i] = this.visibility(i);
+    }
+    for (let i = 0; i < this.count; i++) {
+      const show = visible ? visible[i] : 1;
+      this.visTo[i] = show;
+      // hidden: stay put and shrink; shown: go to the new layout position
+      const k = i * 3;
+      if (show) { this.to[k] = positions[k]; this.to[k + 1] = positions[k + 1]; this.to[k + 2] = positions[k + 2]; }
+      else { this.to[k] = this.from[k]; this.to[k + 1] = this.from[k + 1]; this.to[k + 2] = this.from[k + 2]; }
+    }
+    this.attr.visFrom.needsUpdate = this.attr.visTo.needsUpdate = true;
+    // fewer sprites on screen -> room to draw them bigger (up to 1.8x)
+    const shown = visible ? visible.reduce((a, b) => a + b, 0) : this.count;
+    this.sizeTarget = this.baseSize * Math.min(1.8, Math.pow(this.count / Math.max(1, shown), 0.15));
     if (delays) this.delay.set(delays);
     else for (let i = 0; i < this.count; i++) this.delay[i] = Math.random();
     this.attr.from.needsUpdate = this.attr.to.needsUpdate = this.attr.delay.needsUpdate = true;
     this.uniforms.uT.value = 0;
     this.uniforms.uStagger.value = stagger;
     this.anim = { duration };
-  }
-
-  // dimmed: Float32Array or array of 0/1 per Pokémon (filters use this).
-  setDimmed(dimmed) {
-    this.dim.set(dimmed);
-    this.attr.dim.needsUpdate = true;
   }
 
   // World-space half extents of sprite i (for picking and camera framing).
@@ -183,6 +205,8 @@ export class SpriteField {
 
   update(dt, elapsed) {
     this.uniforms.uTime.value = elapsed;
+    const sm = this.uniforms.uSizeMul;
+    sm.value += (this.sizeTarget - sm.value) * Math.min(1, dt * 4);
     if (this.anim) {
       this.uniforms.uT.value = Math.min(1, this.uniforms.uT.value + dt / this.anim.duration);
       if (this.uniforms.uT.value >= 1) this.anim = null;

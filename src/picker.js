@@ -25,7 +25,7 @@ export class Picker {
     let best = -1, bestDepth = Infinity;
     let near = -1, nearDist = slop;
     for (let i = 0; i < this.field.count; i++) {
-      if (this.field.dim[i] > 0.5) continue;
+      if (this.field.visibility(i) < 0.5) continue; // hidden by filters
       const v = this.field.positionOf(i, this._v).applyMatrix4(view);
       const depth = -v.z;
       if (depth < camera.near) continue;

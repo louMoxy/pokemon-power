@@ -34,7 +34,15 @@ export class Overlay {
 
     const bar = document.getElementById('layout-bar');
     this.buttons = {};
+    let section = null;
     for (const [key, layout] of Object.entries(layouts)) {
+      if (layout.section !== section) {
+        section = layout.section;
+        const s = document.createElement('span');
+        s.className = 'section';
+        s.textContent = section;
+        bar.appendChild(s);
+      }
       const b = document.createElement('button');
       b.textContent = layout.label;
       b.addEventListener('click', () => onLayout(key));
@@ -43,9 +51,10 @@ export class Overlay {
     }
   }
 
-  setLayout(key) {
+  setLayout(key, hint = null) {
     for (const [k, b] of Object.entries(this.buttons)) b.setAttribute('aria-pressed', String(k === key));
-    this.hint.textContent = this.layouts[key].hint;
+    this.buttons[key].scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+    this.hint.textContent = hint ?? this.layouts[key].hint;
   }
 
   showTooltip(p, x, y) {
