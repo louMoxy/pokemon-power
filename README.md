@@ -4,7 +4,7 @@ An interactive data story about **1,025 Pokémon**, nine generations and 28 year
 stats, built with three.js. Scroll through the story, then explore the data yourself:
 group it, filter it, and click any Pokémon to spin it up as a 3D voxel model.
 
-**Live site:** _add your GitHub Pages link here after the first deploy_
+**Live site:** https://loumoxy.github.io/pokemon-power/
 
 ## What the data shows
 
