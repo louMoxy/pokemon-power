@@ -232,7 +232,10 @@ function syncControls() { stage.controls.enabled = mode === 'explore'; }
 stage.renderer.domElement.addEventListener('wheel', (e) => {
   if (mode !== 'story') return;
   e.preventDefault();
-  story.el.scrollBy({ top: e.deltaMode === 1 ? e.deltaY * 40 : e.deltaY });
+  // 'instant': the story layer's smooth scrolling would restart on every wheel tick,
+  // so a trackpad's stream of small ticks barely moved it
+  const dy = e.deltaMode === 1 ? e.deltaY * 40 : e.deltaMode === 2 ? e.deltaY * story.el.clientHeight : e.deltaY;
+  story.el.scrollBy({ top: dy, behavior: 'instant' });
 }, { passive: false });
 addEventListener('keydown', (e) => {
   if (mode !== 'story' || e.target.closest?.('input, textarea, button')) return;
