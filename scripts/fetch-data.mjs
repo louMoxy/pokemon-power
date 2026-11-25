@@ -16,6 +16,14 @@ const STAT_KEYS = {
   'special-attack': 'spa', 'special-defense': 'spd', speed: 'spe',
 };
 
+// Groups PokeAPI does not flag as legendary but which sit on the legendary stat curve.
+const ULTRA_BEASTS = new Set(['nihilego', 'buzzwole', 'pheromosa', 'xurkitree', 'celesteela', 'kartana',
+  'guzzlord', 'poipole', 'naganadel', 'stakataka', 'blacephalon']);
+const PARADOX = new Set(['great-tusk', 'scream-tail', 'brute-bonnet', 'flutter-mane', 'slither-wing',
+  'sandy-shocks', 'roaring-moon', 'walking-wake', 'gouging-fire', 'raging-bolt', 'iron-treads',
+  'iron-bundle', 'iron-hands', 'iron-jugulis', 'iron-moth', 'iron-thorns', 'iron-valiant',
+  'iron-leaves', 'iron-boulder', 'iron-crown']);
+
 await fs.mkdir(CACHE_DIR, { recursive: true });
 
 async function get(url) {
@@ -100,6 +108,7 @@ const rows = await mapLimit(species, CONCURRENCY, async (s) => {
     isLegendary: s.is_legendary,
     isMythical: s.is_mythical,
     isBaby: s.is_baby,
+    specialClass: ULTRA_BEASTS.has(s.name) ? 'ultra-beast' : PARADOX.has(s.name) ? 'paradox' : null,
     evoStage: e.stage,
     chainLength: e.chainLength,
     fullyEvolved: e.fullyEvolved,

@@ -1,0 +1,3247 @@
+{
+ "generatedFrom": {
+  "species": 1025,
+  "core": 479,
+  "legendaryOrMythical": 88
+ },
+ "definitions": {
+  "core": "Fully evolved, not legendary or mythical, default form only",
+  "bst": "Base stat total: HP + Atk + Def + SpA + SpD + Spe"
+ },
+ "genSummary": [
+  {
+   "generation": 1,
+   "speciesAdded": 151,
+   "core": {
+    "n": 61,
+    "mean": 484.6,
+    "median": 490,
+    "p10": 425,
+    "p25": 455,
+    "p75": 515,
+    "p90": 530,
+    "max": 600,
+    "stats": {
+     "hp": 76.7,
+     "atk": 89.2,
+     "def": 78.1,
+     "spa": 78,
+     "spd": 82,
+     "spe": 80.6
+    }
+   },
+   "allSpecies": {
+    "mean": 407.6
+   },
+   "strictCore": {
+    "n": 61,
+    "mean": 484.6
+   },
+   "specialClass": {
+    "n": 0,
+    "mean": null
+   },
+   "legendary": {
+    "n": 5,
+    "mean": 604
+   }
+  },
+  {
+   "generation": 2,
+   "speciesAdded": 100,
+   "core": {
+    "n": 42,
+    "mean": 467.4,
+    "median": 482.5,
+    "p10": 400.5,
+    "p25": 430,
+    "p75": 508.75,
+    "p90": 533.6,
+    "max": 600,
+    "stats": {
+     "hp": 84,
+     "atk": 75.8,
+     "def": 86.3,
+     "spa": 70.3,
+     "spd": 86.7,
+     "spe": 64.3
+    }
+   },
+   "allSpecies": {
+    "mean": 407.2
+   },
+   "strictCore": {
+    "n": 42,
+    "mean": 467.4
+   },
+   "specialClass": {
+    "n": 0,
+    "mean": null
+   },
+   "legendary": {
+    "n": 6,
+    "mean": 616.7
+   }
+  },
+  {
+   "generation": 3,
+   "speciesAdded": 135,
+   "core": {
+    "n": 62,
+    "mean": 464.8,
+    "median": 466,
+    "p10": 395.5,
+    "p25": 440,
+    "p75": 490,
+    "p90": 530,
+    "max": 670,
+    "stats": {
+     "hp": 76.1,
+     "atk": 86,
+     "def": 76.6,
+     "spa": 79.3,
+     "spd": 74.6,
+     "spe": 72.1
+    }
+   },
+   "allSpecies": {
+    "mean": 403.7
+   },
+   "strictCore": {
+    "n": 62,
+    "mean": 464.8
+   },
+   "specialClass": {
+    "n": 0,
+    "mean": null
+   },
+   "legendary": {
+    "n": 10,
+    "mean": 616
+   }
+  },
+  {
+   "generation": 4,
+   "speciesAdded": 107,
+   "core": {
+    "n": 54,
+    "mean": 495.6,
+    "median": 500,
+    "p10": 428.8,
+    "p25": 479.25,
+    "p75": 525,
+    "p90": 535,
+    "max": 600,
+    "stats": {
+     "hp": 79.4,
+     "atk": 91.4,
+     "def": 84.4,
+     "spa": 83.6,
+     "spd": 80.9,
+     "spe": 75.9
+    }
+   },
+   "allSpecies": {
+    "mean": 445.6
+   },
+   "strictCore": {
+    "n": 54,
+    "mean": 495.6
+   },
+   "specialClass": {
+    "n": 0,
+    "mean": null
+   },
+   "legendary": {
+    "n": 13,
+    "mean": 626.9
+   }
+  },
+  {
+   "generation": 5,
+   "speciesAdded": 156,
+   "core": {
+    "n": 67,
+    "mean": 493.3,
+    "median": 490,
+    "p10": 464.6,
+    "p25": 480,
+    "p75": 510,
+    "p90": 528,
+    "max": 600,
+    "stats": {
+     "hp": 82.9,
+     "atk": 94.9,
+     "def": 81.1,
+     "spa": 79.5,
+     "spd": 77.9,
+     "spe": 77
+    }
+   },
+   "allSpecies": {
+    "mean": 425.8
+   },
+   "strictCore": {
+    "n": 67,
+    "mean": 493.3
+   },
+   "specialClass": {
+    "n": 0,
+    "mean": null
+   },
+   "legendary": {
+    "n": 13,
+    "mean": 607.7
+   }
+  },
+  {
+   "generation": 6,
+   "speciesAdded": 72,
+   "core": {
+    "n": 32,
+    "mean": 497.9,
+    "median": 500,
+    "p10": 462.4,
+    "p25": 478.5,
+    "p75": 522,
+    "p90": 533.7,
+    "max": 600,
+    "stats": {
+     "hp": 80.6,
+     "atk": 80.5,
+     "def": 86.5,
+     "spa": 83.1,
+     "spd": 88.7,
+     "spe": 78.6
+    }
+   },
+   "allSpecies": {
+    "mean": 429.3
+   },
+   "strictCore": {
+    "n": 32,
+    "mean": 497.9
+   },
+   "specialClass": {
+    "n": 0,
+    "mean": null
+   },
+   "legendary": {
+    "n": 6,
+    "mean": 626.7
+   }
+  },
+  {
+   "generation": 7,
+   "speciesAdded": 88,
+   "core": {
+    "n": 44,
+    "mean": 496.5,
+    "median": 490,
+    "p10": 436.5,
+    "p25": 477.5,
+    "p75": 532.5,
+    "p90": 570,
+    "max": 600,
+    "stats": {
+     "hp": 78.3,
+     "atk": 94.9,
+     "def": 88.4,
+     "spa": 83,
+     "spd": 84.1,
+     "spe": 67.8
+    }
+   },
+   "allSpecies": {
+    "mean": 449.4
+   },
+   "strictCore": {
+    "n": 34,
+    "mean": 475.7
+   },
+   "specialClass": {
+    "n": 10,
+    "mean": 567
+   },
+   "legendary": {
+    "n": 12,
+    "mean": 600.8
+   }
+  },
+  {
+   "generation": 8,
+   "speciesAdded": 96,
+   "core": {
+    "n": 49,
+    "mean": 497.4,
+    "median": 502,
+    "p10": 460,
+    "p25": 480,
+    "p75": 510,
+    "p90": 530,
+    "max": 600,
+    "stats": {
+     "hp": 81,
+     "atk": 98.2,
+     "def": 85.3,
+     "spa": 80.5,
+     "spd": 81.3,
+     "spe": 71.1
+    }
+   },
+   "allSpecies": {
+    "mean": 439.2
+   },
+   "strictCore": {
+    "n": 49,
+    "mean": 497.4
+   },
+   "specialClass": {
+    "n": 0,
+    "mean": null
+   },
+   "legendary": {
+    "n": 11,
+    "mean": 596.4
+   }
+  },
+  {
+   "generation": 9,
+   "speciesAdded": 120,
+   "core": {
+    "n": 68,
+    "mean": 521.9,
+    "median": 520.5,
+    "p10": 466.1,
+    "p25": 485.75,
+    "p75": 570,
+    "p90": 590,
+    "max": 600,
+    "stats": {
+     "hp": 89.5,
+     "atk": 95.3,
+     "def": 87.7,
+     "spa": 83.6,
+     "spd": 81,
+     "spe": 84.8
+    }
+   },
+   "allSpecies": {
+    "mean": 457.4
+   },
+   "strictCore": {
+    "n": 48,
+    "mean": 498.5
+   },
+   "specialClass": {
+    "n": 20,
+    "mean": 578
+   },
+   "legendary": {
+    "n": 12,
+    "mean": 573.8
+   }
+  }
+ ],
+ "creep": {
+  "coreTrend": {
+   "slope": 5.18,
+   "ci95": [
+    3.47,
+    6.85
+   ],
+   "spearman": 0.248
+  },
+  "allTrend": {
+   "slope": 6.24,
+   "ci95": [
+    3.61,
+    8.83
+   ]
+  },
+  "legendaryTrend": {
+   "slope": -4.86,
+   "ci95": [
+    -9.12,
+    -0.6
+   ]
+  },
+  "gen1to8Trend": {
+   "slope": 3.75,
+   "ci95": [
+    1.6,
+    5.85
+   ]
+  },
+  "strictCoreTrend": {
+   "slope": 2.85,
+   "ci95": [
+    1.12,
+    4.57
+   ]
+  },
+  "strictGen1to8Trend": {
+   "slope": 2.8,
+   "ci95": [
+    0.7,
+    4.88
+   ]
+  }
+ },
+ "statCreep": {
+  "hp": {
+   "slope": 1.02,
+   "ci95": [
+    0.14,
+    1.85
+   ]
+  },
+  "atk": {
+   "slope": 1.52,
+   "ci95": [
+    0.64,
+    2.39
+   ]
+  },
+  "def": {
+   "slope": 1.09,
+   "ci95": [
+    0.19,
+    1.99
+   ]
+  },
+  "spa": {
+   "slope": 0.9,
+   "ci95": [
+    -0.01,
+    1.83
+   ]
+  },
+  "spd": {
+   "slope": 0.12,
+   "ci95": [
+    -0.58,
+    0.81
+   ]
+  },
+  "spe": {
+   "slope": 0.55,
+   "ci95": [
+    -0.38,
+    1.49
+   ]
+  }
+ },
+ "byLine": {
+  "singleStage": [
+   {
+    "generation": 1,
+    "n": 6,
+    "mean": 469.7
+   },
+   {
+    "generation": 2,
+    "n": 7,
+    "mean": 410.9
+   },
+   {
+    "generation": 3,
+    "n": 18,
+    "mean": 427.6
+   },
+   {
+    "generation": 4,
+    "n": 5,
+    "mean": 439
+   },
+   {
+    "generation": 5,
+    "n": 13,
+    "mean": 473.3
+   },
+   {
+    "generation": 6,
+    "n": 5,
+    "mean": 474.6
+   },
+   {
+    "generation": 7,
+    "n": 23,
+    "mean": 497.8
+   },
+   {
+    "generation": 8,
+    "n": 11,
+    "mean": 477.4
+   },
+   {
+    "generation": 9,
+    "n": 29,
+    "mean": 547.4
+   }
+  ],
+  "twoStage": [
+   {
+    "generation": 1,
+    "n": 36,
+    "mean": 482.8
+   },
+   {
+    "generation": 2,
+    "n": 23,
+    "mean": 459.7
+   },
+   {
+    "generation": 3,
+    "n": 29,
+    "mean": 459.6
+   },
+   {
+    "generation": 4,
+    "n": 33,
+    "mean": 486.4
+   },
+   {
+    "generation": 5,
+    "n": 35,
+    "mean": 488.1
+   },
+   {
+    "generation": 6,
+    "n": 19,
+    "mean": 495
+   },
+   {
+    "generation": 7,
+    "n": 14,
+    "mean": 479.4
+   },
+   {
+    "generation": 8,
+    "n": 24,
+    "mean": 493.3
+   },
+   {
+    "generation": 9,
+    "n": 28,
+    "mean": 492.5
+   }
+  ],
+  "threeStage": [
+   {
+    "generation": 1,
+    "n": 19,
+    "mean": 492.7
+   },
+   {
+    "generation": 2,
+    "n": 12,
+    "mean": 515.3
+   },
+   {
+    "generation": 3,
+    "n": 15,
+    "mean": 519.5
+   },
+   {
+    "generation": 4,
+    "n": 16,
+    "mean": 532.2
+   },
+   {
+    "generation": 5,
+    "n": 19,
+    "mean": 516.6
+   },
+   {
+    "generation": 6,
+    "n": 8,
+    "mean": 519.5
+   },
+   {
+    "generation": 7,
+    "n": 7,
+    "mean": 526.4
+   },
+   {
+    "generation": 8,
+    "n": 14,
+    "mean": 520
+   },
+   {
+    "generation": 9,
+    "n": 11,
+    "mean": 529.2
+   }
+  ]
+ },
+ "typeGen": [
+  {
+   "type": "bug",
+   "n": 47,
+   "mean": 463.2,
+   "trend": {
+    "slope": 9.94,
+    "ci95": [
+     3.9,
+     16.7
+    ]
+   },
+   "byGen": [
+    {
+     "generation": 1,
+     "n": 5,
+     "mean": 429
+    },
+    {
+     "generation": 2,
+     "n": 6,
+     "mean": 460
+    },
+    {
+     "generation": 3,
+     "n": 8,
+     "mean": 410.1
+    },
+    {
+     "generation": 4,
+     "n": 5,
+     "mean": 444.2
+    },
+    {
+     "generation": 5,
+     "n": 8,
+     "mean": 495.8
+    },
+    {
+     "generation": 6,
+     "n": 1,
+     "mean": null
+    },
+    {
+     "generation": 7,
+     "n": 6,
+     "mean": 514.7
+    },
+    {
+     "generation": 8,
+     "n": 4,
+     "mean": 501.3
+    },
+    {
+     "generation": 9,
+     "n": 4,
+     "mean": 473.5
+    }
+   ],
+   "share": [
+    0.079,
+    0.1,
+    0.104,
+    0.084,
+    0.115,
+    0.042,
+    0.125,
+    0.083,
+    0.058
+   ]
+  },
+  {
+   "type": "dark",
+   "n": 39,
+   "mean": 502.9,
+   "trend": {
+    "slope": 5.62,
+    "ci95": [
+     -1.16,
+     12.42
+    ]
+   },
+   "byGen": [
+    {
+     "generation": 1,
+     "n": 0,
+     "mean": null
+    },
+    {
+     "generation": 2,
+     "n": 3,
+     "mean": 541.7
+    },
+    {
+     "generation": 3,
+     "n": 7,
+     "mean": 449.7
+    },
+    {
+     "generation": 4,
+     "n": 5,
+     "mean": 495.8
+    },
+    {
+     "generation": 5,
+     "n": 6,
+     "mean": 512.2
+    },
+    {
+     "generation": 6,
+     "n": 3,
+     "mean": 502.3
+    },
+    {
+     "generation": 7,
+     "n": 2,
+     "mean": null
+    },
+    {
+     "generation": 8,
+     "n": 5,
+     "mean": 486.2
+    },
+    {
+     "generation": 9,
+     "n": 8,
+     "mean": 531.3
+    }
+   ],
+   "share": [
+    0,
+    0.06,
+    0.074,
+    0.065,
+    0.103,
+    0.069,
+    0.023,
+    0.104,
+    0.108
+   ]
+  },
+  {
+   "type": "dragon",
+   "n": 32,
+   "mean": 545.7,
+   "trend": {
+    "slope": -0.67,
+    "ci95": [
+     -7.39,
+     7.08
+    ]
+   },
+   "byGen": [
+    {
+     "generation": 1,
+     "n": 1,
+     "mean": null
+    },
+    {
+     "generation": 2,
+     "n": 1,
+     "mean": null
+    },
+    {
+     "generation": 3,
+     "n": 3,
+     "mean": 536.7
+    },
+    {
+     "generation": 4,
+     "n": 1,
+     "mean": null
+    },
+    {
+     "generation": 5,
+     "n": 3,
+     "mean": 541.7
+    },
+    {
+     "generation": 6,
+     "n": 4,
+     "mean": 537.5
+    },
+    {
+     "generation": 7,
+     "n": 5,
+     "mean": 536
+    },
+    {
+     "generation": 8,
+     "n": 5,
+     "mean": 516
+    },
+    {
+     "generation": 9,
+     "n": 9,
+     "mean": 564
+    }
+   ],
+   "share": [
+    0.02,
+    0.01,
+    0.067,
+    0.056,
+    0.064,
+    0.125,
+    0.08,
+    0.115,
+    0.117
+   ]
+  },
+  {
+   "type": "electric",
+   "n": 36,
+   "mean": 490.2,
+   "trend": {
+    "slope": 5.96,
+    "ci95": [
+     0.36,
+     12.73
+    ]
+   },
+   "byGen": [
+    {
+     "generation": 1,
+     "n": 3,
+     "mean": 500
+    },
+    {
+     "generation": 2,
+     "n": 2,
+     "mean": null
+    },
+    {
+     "generation": 3,
+     "n": 3,
+     "mean": 428.3
+    },
+    {
+     "generation": 4,
+     "n": 5,
+     "mean": 488.6
+    },
+    {
+     "generation": 5,
+     "n": 5,
+     "mean": 476.6
+    },
+    {
+     "generation": 6,
+     "n": 2,
+     "mean": null
+    },
+    {
+     "generation": 7,
+     "n": 3,
+     "mean": 501.7
+    },
+    {
+     "generation": 8,
+     "n": 6,
+     "mean": 478.8
+    },
+    {
+     "generation": 9,
+     "n": 7,
+     "mean": 539.3
+    }
+   ],
+   "share": [
+    0.06,
+    0.08,
+    0.03,
+    0.065,
+    0.071,
+    0.042,
+    0.068,
+    0.094,
+    0.1
+   ]
+  },
+  {
+   "type": "fairy",
+   "n": 28,
+   "mean": 490,
+   "trend": {
+    "slope": 10.09,
+    "ci95": [
+     3.18,
+     17.26
+    ]
+   },
+   "byGen": [
+    {
+     "generation": 1,
+     "n": 2,
+     "mean": null
+    },
+    {
+     "generation": 2,
+     "n": 2,
+     "mean": null
+    },
+    {
+     "generation": 3,
+     "n": 2,
+     "mean": null
+    },
+    {
+     "generation": 4,
+     "n": 1,
+     "mean": null
+    },
+    {
+     "generation": 5,
+     "n": 1,
+     "mean": null
+    },
+    {
+     "generation": 6,
+     "n": 7,
+     "mean": 488.6
+    },
+    {
+     "generation": 7,
+     "n": 5,
+     "mean": 472
+    },
+    {
+     "generation": 8,
+     "n": 3,
+     "mean": 505
+    },
+    {
+     "generation": 9,
+     "n": 5,
+     "mean": 542.6
+    }
+   ],
+   "share": [
+    0.033,
+    0.08,
+    0.037,
+    0.019,
+    0.013,
+    0.181,
+    0.136,
+    0.083,
+    0.075
+   ]
+  },
+  {
+   "type": "fighting",
+   "n": 41,
+   "mean": 508.2,
+   "trend": {
+    "slope": 7.84,
+    "ci95": [
+     3.73,
+     12.07
+    ]
+   },
+   "byGen": [
+    {
+     "generation": 1,
+     "n": 4,
+     "mean": 481.3
+    },
+    {
+     "generation": 2,
+     "n": 2,
+     "mean": null
+    },
+    {
+     "generation": 3,
+     "n": 4,
+     "mean": 468.5
+    },
+    {
+     "generation": 4,
+     "n": 4,
+     "mean": 516.8
+    },
+    {
+     "generation": 5,
+     "n": 6,
+     "mean": 493.5
+    },
+    {
+     "generation": 6,
+     "n": 3,
+     "mean": 508.3
+    },
+    {
+     "generation": 7,
+     "n": 6,
+     "mean": 534.7
+    },
+    {
+     "generation": 8,
+     "n": 4,
+     "mean": 491.8
+    },
+    {
+     "generation": 9,
+     "n": 8,
+     "mean": 544.4
+    }
+   ],
+   "share": [
+    0.053,
+    0.03,
+    0.052,
+    0.065,
+    0.096,
+    0.056,
+    0.114,
+    0.083,
+    0.092
+   ]
+  },
+  {
+   "type": "fire",
+   "n": 36,
+   "mean": 515.3,
+   "trend": {
+    "slope": 2.73,
+    "ci95": [
+     -1.26,
+     7.45
+    ]
+   },
+   "byGen": [
+    {
+     "generation": 1,
+     "n": 5,
+     "mean": 523.8
+    },
+    {
+     "generation": 2,
+     "n": 3,
+     "mean": 488
+    },
+    {
+     "generation": 3,
+     "n": 3,
+     "mean": 486.7
+    },
+    {
+     "generation": 4,
+     "n": 2,
+     "mean": null
+    },
+    {
+     "generation": 5,
+     "n": 6,
+     "mean": 510
+    },
+    {
+     "generation": 6,
+     "n": 3,
+     "mean": 513.3
+    },
+    {
+     "generation": 7,
+     "n": 5,
+     "mean": 508.2
+    },
+    {
+     "generation": 8,
+     "n": 3,
+     "mean": 521.7
+    },
+    {
+     "generation": 9,
+     "n": 6,
+     "mean": 537.7
+    }
+   ],
+   "share": [
+    0.079,
+    0.1,
+    0.044,
+    0.047,
+    0.096,
+    0.111,
+    0.091,
+    0.073,
+    0.083
+   ]
+  },
+  {
+   "type": "flying",
+   "n": 56,
+   "mean": 480.7,
+   "trend": {
+    "slope": 2.41,
+    "ci95": [
+     -3.61,
+     8.5
+    ]
+   },
+   "byGen": [
+    {
+     "generation": 1,
+     "n": 8,
+     "mean": 496.9
+    },
+    {
+     "generation": 2,
+     "n": 8,
+     "mean": 448.4
+    },
+    {
+     "generation": 3,
+     "n": 8,
+     "mean": 468.8
+    },
+    {
+     "generation": 4,
+     "n": 9,
+     "mean": 485.2
+    },
+    {
+     "generation": 5,
+     "n": 8,
+     "mean": 486.4
+    },
+    {
+     "generation": 6,
+     "n": 4,
+     "mean": 486.3
+    },
+    {
+     "generation": 7,
+     "n": 4,
+     "mean": 492.8
+    },
+    {
+     "generation": 8,
+     "n": 2,
+     "mean": null
+    },
+    {
+     "generation": 9,
+     "n": 5,
+     "mean": 492.4
+    }
+   ],
+   "share": [
+    0.126,
+    0.19,
+    0.089,
+    0.131,
+    0.115,
+    0.111,
+    0.091,
+    0.052,
+    0.05
+   ]
+  },
+  {
+   "type": "ghost",
+   "n": 35,
+   "mean": 494.8,
+   "trend": {
+    "slope": 13.82,
+    "ci95": [
+     5.33,
+     25.65
+    ]
+   },
+   "byGen": [
+    {
+     "generation": 1,
+     "n": 1,
+     "mean": null
+    },
+    {
+     "generation": 2,
+     "n": 0,
+     "mean": null
+    },
+    {
+     "generation": 3,
+     "n": 3,
+     "mean": 357
+    },
+    {
+     "generation": 4,
+     "n": 6,
+     "mean": 487.2
+    },
+    {
+     "generation": 5,
+     "n": 4,
+     "mean": 491.5
+    },
+    {
+     "generation": 6,
+     "n": 3,
+     "mean": 489.3
+    },
+    {
+     "generation": 7,
+     "n": 5,
+     "mean": 514.6
+    },
+    {
+     "generation": 8,
+     "n": 5,
+     "mean": 526.2
+    },
+    {
+     "generation": 9,
+     "n": 8,
+     "mean": 523.3
+    }
+   ],
+   "share": [
+    0.02,
+    0.01,
+    0.044,
+    0.075,
+    0.058,
+    0.111,
+    0.091,
+    0.094,
+    0.108
+   ]
+  },
+  {
+   "type": "grass",
+   "n": 56,
+   "mean": 495.5,
+   "trend": {
+    "slope": 4.89,
+    "ci95": [
+     0.59,
+     8.96
+    ]
+   },
+   "byGen": [
+    {
+     "generation": 1,
+     "n": 5,
+     "mean": 488
+    },
+    {
+     "generation": 2,
+     "n": 4,
+     "mean": 475
+    },
+    {
+     "generation": 3,
+     "n": 7,
+     "mean": 482.9
+    },
+    {
+     "generation": 4,
+     "n": 8,
+     "mean": 490.3
+    },
+    {
+     "generation": 5,
+     "n": 9,
+     "mean": 486.1
+    },
+    {
+     "generation": 6,
+     "n": 4,
+     "mean": 507.3
+    },
+    {
+     "generation": 7,
+     "n": 6,
+     "mean": 502
+    },
+    {
+     "generation": 8,
+     "n": 4,
+     "mean": 490
+    },
+    {
+     "generation": 9,
+     "n": 9,
+     "mean": 525.4
+    }
+   ],
+   "share": [
+    0.093,
+    0.1,
+    0.126,
+    0.131,
+    0.128,
+    0.125,
+    0.148,
+    0.104,
+    0.167
+   ]
+  },
+  {
+   "type": "ground",
+   "n": 37,
+   "mean": 500.5,
+   "trend": {
+    "slope": 5.54,
+    "ci95": [
+     -0.18,
+     10.57
+    ]
+   },
+   "byGen": [
+    {
+     "generation": 1,
+     "n": 6,
+     "mean": 467.5
+    },
+    {
+     "generation": 2,
+     "n": 3,
+     "mean": 480
+    },
+    {
+     "generation": 3,
+     "n": 5,
+     "mean": 496.6
+    },
+    {
+     "generation": 4,
+     "n": 7,
+     "mean": 528.6
+    },
+    {
+     "generation": 5,
+     "n": 5,
+     "mean": 498
+    },
+    {
+     "generation": 6,
+     "n": 1,
+     "mean": null
+    },
+    {
+     "generation": 7,
+     "n": 2,
+     "mean": null
+    },
+    {
+     "generation": 8,
+     "n": 3,
+     "mean": 514.3
+    },
+    {
+     "generation": 9,
+     "n": 5,
+     "mean": 531
+    }
+   ],
+   "share": [
+    0.093,
+    0.1,
+    0.096,
+    0.093,
+    0.071,
+    0.028,
+    0.045,
+    0.042,
+    0.058
+   ]
+  },
+  {
+   "type": "ice",
+   "n": 26,
+   "mean": 504,
+   "trend": {
+    "slope": 6.28,
+    "ci95": [
+     -0.88,
+     14.99
+    ]
+   },
+   "byGen": [
+    {
+     "generation": 1,
+     "n": 4,
+     "mean": 497.5
+    },
+    {
+     "generation": 2,
+     "n": 1,
+     "mean": null
+    },
+    {
+     "generation": 3,
+     "n": 2,
+     "mean": null
+    },
+    {
+     "generation": 4,
+     "n": 5,
+     "mean": 507.8
+    },
+    {
+     "generation": 5,
+     "n": 3,
+     "mean": 518.3
+    },
+    {
+     "generation": 6,
+     "n": 2,
+     "mean": null
+    },
+    {
+     "generation": 7,
+     "n": 1,
+     "mean": null
+    },
+    {
+     "generation": 8,
+     "n": 5,
+     "mean": 495
+    },
+    {
+     "generation": 9,
+     "n": 3,
+     "mean": 563.7
+    }
+   ],
+   "share": [
+    0.033,
+    0.05,
+    0.044,
+    0.056,
+    0.045,
+    0.056,
+    0.011,
+    0.073,
+    0.058
+   ]
+  },
+  {
+   "type": "normal",
+   "n": 63,
+   "mean": 469.3,
+   "trend": {
+    "slope": 6.33,
+    "ci95": [
+     1.25,
+     11.72
+    ]
+   },
+   "byGen": [
+    {
+     "generation": 1,
+     "n": 10,
+     "mean": 448.7
+    },
+    {
+     "generation": 2,
+     "n": 5,
+     "mean": 429.4
+    },
+    {
+     "generation": 3,
+     "n": 8,
+     "mean": 461.6
+    },
+    {
+     "generation": 4,
+     "n": 8,
+     "mean": 471.3
+    },
+    {
+     "generation": 5,
+     "n": 8,
+     "mean": 474.8
+    },
+    {
+     "generation": 6,
+     "n": 4,
+     "mean": 470.8
+    },
+    {
+     "generation": 7,
+     "n": 6,
+     "mean": 476.3
+    },
+    {
+     "generation": 8,
+     "n": 6,
+     "mean": 503.3
+    },
+    {
+     "generation": 9,
+     "n": 8,
+     "mean": 489
+    }
+   ],
+   "share": [
+    0.146,
+    0.15,
+    0.133,
+    0.159,
+    0.109,
+    0.111,
+    0.136,
+    0.083,
+    0.117
+   ]
+  },
+  {
+   "type": "poison",
+   "n": 37,
+   "mean": 488.5,
+   "trend": {
+    "slope": 3.95,
+    "ci95": [
+     -0.16,
+     8.29
+    ]
+   },
+   "byGen": [
+    {
+     "generation": 1,
+     "n": 12,
+     "mean": 484.4
+    },
+    {
+     "generation": 2,
+     "n": 2,
+     "mean": null
+    },
+    {
+     "generation": 3,
+     "n": 3,
+     "mean": 436.7
+    },
+    {
+     "generation": 4,
+     "n": 4,
+     "mean": 496
+    },
+    {
+     "generation": 5,
+     "n": 3,
+     "mean": 474.3
+    },
+    {
+     "generation": 6,
+     "n": 1,
+     "mean": null
+    },
+    {
+     "generation": 7,
+     "n": 4,
+     "mean": 521.3
+    },
+    {
+     "generation": 8,
+     "n": 3,
+     "mean": 507.3
+    },
+    {
+     "generation": 9,
+     "n": 5,
+     "mean": 502
+    }
+   ],
+   "share": [
+    0.219,
+    0.04,
+    0.037,
+    0.075,
+    0.045,
+    0.028,
+    0.08,
+    0.052,
+    0.1
+   ]
+  },
+  {
+   "type": "psychic",
+   "n": 46,
+   "mean": 494.7,
+   "trend": {
+    "slope": 6.47,
+    "ci95": [
+     1.5,
+     11.41
+    ]
+   },
+   "byGen": [
+    {
+     "generation": 1,
+     "n": 6,
+     "mean": 496.3
+    },
+    {
+     "generation": 2,
+     "n": 5,
+     "mean": 445.2
+    },
+    {
+     "generation": 3,
+     "n": 8,
+     "mean": 484.1
+    },
+    {
+     "generation": 4,
+     "n": 2,
+     "mean": null
+    },
+    {
+     "generation": 5,
+     "n": 6,
+     "mean": 477.8
+    },
+    {
+     "generation": 6,
+     "n": 3,
+     "mean": 494
+    },
+    {
+     "generation": 7,
+     "n": 2,
+     "mean": null
+    },
+    {
+     "generation": 8,
+     "n": 5,
+     "mean": 507
+    },
+    {
+     "generation": 9,
+     "n": 9,
+     "mean": 534.9
+    }
+   ],
+   "share": [
+    0.093,
+    0.1,
+    0.148,
+    0.084,
+    0.096,
+    0.083,
+    0.091,
+    0.094,
+    0.092
+   ]
+  },
+  {
+   "type": "rock",
+   "n": 39,
+   "mean": 504.9,
+   "trend": {
+    "slope": 3.32,
+    "ci95": [
+     -2.25,
+     9.01
+    ]
+   },
+   "byGen": [
+    {
+     "generation": 1,
+     "n": 4,
+     "mean": 500
+    },
+    {
+     "generation": 2,
+     "n": 4,
+     "mean": 486.3
+    },
+    {
+     "generation": 3,
+     "n": 6,
+     "mean": 487.5
+    },
+    {
+     "generation": 4,
+     "n": 4,
+     "mean": 512.5
+    },
+    {
+     "generation": 5,
+     "n": 4,
+     "mean": 515.5
+    },
+    {
+     "generation": 6,
+     "n": 4,
+     "mean": 510.5
+    },
+    {
+     "generation": 7,
+     "n": 4,
+     "mean": 516.8
+    },
+    {
+     "generation": 8,
+     "n": 4,
+     "mean": 491.3
+    },
+    {
+     "generation": 9,
+     "n": 5,
+     "mean": 527
+    }
+   ],
+   "share": [
+    0.073,
+    0.07,
+    0.089,
+    0.065,
+    0.064,
+    0.111,
+    0.057,
+    0.063,
+    0.067
+   ]
+  },
+  {
+   "type": "steel",
+   "n": 35,
+   "mean": 512.9,
+   "trend": {
+    "slope": 5.58,
+    "ci95": [
+     -1.12,
+     12.3
+    ]
+   },
+   "byGen": [
+    {
+     "generation": 1,
+     "n": 0,
+     "mean": null
+    },
+    {
+     "generation": 2,
+     "n": 4,
+     "mean": 485
+    },
+    {
+     "generation": 3,
+     "n": 3,
+     "mean": 503.3
+    },
+    {
+     "generation": 4,
+     "n": 6,
+     "mean": 518.3
+    },
+    {
+     "generation": 5,
+     "n": 5,
+     "mean": 499.2
+    },
+    {
+     "generation": 6,
+     "n": 2,
+     "mean": null
+    },
+    {
+     "generation": 7,
+     "n": 4,
+     "mean": 536.3
+    },
+    {
+     "generation": 8,
+     "n": 3,
+     "mean": 478.3
+    },
+    {
+     "generation": 9,
+     "n": 8,
+     "mean": 543.3
+    }
+   ],
+   "share": [
+    0.013,
+    0.04,
+    0.067,
+    0.093,
+    0.077,
+    0.056,
+    0.091,
+    0.052,
+    0.092
+   ]
+  },
+  {
+   "type": "water",
+   "n": 74,
+   "mean": 488.1,
+   "trend": {
+    "slope": -0.41,
+    "ci95": [
+     -5.31,
+     3.86
+    ]
+   },
+   "byGen": [
+    {
+     "generation": 1,
+     "n": 15,
+     "mean": 505.3
+    },
+    {
+     "generation": 2,
+     "n": 9,
+     "mean": 481.7
+    },
+    {
+     "generation": 3,
+     "n": 13,
+     "mean": 477.4
+    },
+    {
+     "generation": 4,
+     "n": 5,
+     "mean": 474
+    },
+    {
+     "generation": 5,
+     "n": 7,
+     "mean": 493.3
+    },
+    {
+     "generation": 6,
+     "n": 3,
+     "mean": 510
+    },
+    {
+     "generation": 7,
+     "n": 7,
+     "mean": 438.4
+    },
+    {
+     "generation": 8,
+     "n": 7,
+     "mean": 502.9
+    },
+    {
+     "generation": 9,
+     "n": 8,
+     "mean": 506.9
+    }
+   ],
+   "share": [
+    0.212,
+    0.18,
+    0.207,
+    0.131,
+    0.109,
+    0.125,
+    0.148,
+    0.115,
+    0.1
+   ]
+  }
+ ],
+ "typeLeaders": [
+  {
+   "generation": 1,
+   "strongest": [
+    {
+     "type": "fire",
+     "generation": 1,
+     "n": 5,
+     "mean": 523.8
+    },
+    {
+     "type": "water",
+     "generation": 1,
+     "n": 15,
+     "mean": 505.3
+    },
+    {
+     "type": "electric",
+     "generation": 1,
+     "n": 3,
+     "mean": 500
+    }
+   ],
+   "mostCommon": [
+    {
+     "type": "poison",
+     "share": 0.219
+    },
+    {
+     "type": "water",
+     "share": 0.212
+    },
+    {
+     "type": "normal",
+     "share": 0.146
+    }
+   ]
+  },
+  {
+   "generation": 2,
+   "strongest": [
+    {
+     "type": "dark",
+     "generation": 2,
+     "n": 3,
+     "mean": 541.7
+    },
+    {
+     "type": "fire",
+     "generation": 2,
+     "n": 3,
+     "mean": 488
+    },
+    {
+     "type": "rock",
+     "generation": 2,
+     "n": 4,
+     "mean": 486.3
+    }
+   ],
+   "mostCommon": [
+    {
+     "type": "flying",
+     "share": 0.19
+    },
+    {
+     "type": "water",
+     "share": 0.18
+    },
+    {
+     "type": "normal",
+     "share": 0.15
+    }
+   ]
+  },
+  {
+   "generation": 3,
+   "strongest": [
+    {
+     "type": "dragon",
+     "generation": 3,
+     "n": 3,
+     "mean": 536.7
+    },
+    {
+     "type": "steel",
+     "generation": 3,
+     "n": 3,
+     "mean": 503.3
+    },
+    {
+     "type": "ground",
+     "generation": 3,
+     "n": 5,
+     "mean": 496.6
+    }
+   ],
+   "mostCommon": [
+    {
+     "type": "water",
+     "share": 0.207
+    },
+    {
+     "type": "psychic",
+     "share": 0.148
+    },
+    {
+     "type": "normal",
+     "share": 0.133
+    }
+   ]
+  },
+  {
+   "generation": 4,
+   "strongest": [
+    {
+     "type": "ground",
+     "generation": 4,
+     "n": 7,
+     "mean": 528.6
+    },
+    {
+     "type": "steel",
+     "generation": 4,
+     "n": 6,
+     "mean": 518.3
+    },
+    {
+     "type": "fighting",
+     "generation": 4,
+     "n": 4,
+     "mean": 516.8
+    }
+   ],
+   "mostCommon": [
+    {
+     "type": "normal",
+     "share": 0.159
+    },
+    {
+     "type": "flying",
+     "share": 0.131
+    },
+    {
+     "type": "grass",
+     "share": 0.131
+    }
+   ]
+  },
+  {
+   "generation": 5,
+   "strongest": [
+    {
+     "type": "dragon",
+     "generation": 5,
+     "n": 3,
+     "mean": 541.7
+    },
+    {
+     "type": "ice",
+     "generation": 5,
+     "n": 3,
+     "mean": 518.3
+    },
+    {
+     "type": "rock",
+     "generation": 5,
+     "n": 4,
+     "mean": 515.5
+    }
+   ],
+   "mostCommon": [
+    {
+     "type": "grass",
+     "share": 0.128
+    },
+    {
+     "type": "bug",
+     "share": 0.115
+    },
+    {
+     "type": "flying",
+     "share": 0.115
+    }
+   ]
+  },
+  {
+   "generation": 6,
+   "strongest": [
+    {
+     "type": "dragon",
+     "generation": 6,
+     "n": 4,
+     "mean": 537.5
+    },
+    {
+     "type": "fire",
+     "generation": 6,
+     "n": 3,
+     "mean": 513.3
+    },
+    {
+     "type": "rock",
+     "generation": 6,
+     "n": 4,
+     "mean": 510.5
+    }
+   ],
+   "mostCommon": [
+    {
+     "type": "fairy",
+     "share": 0.181
+    },
+    {
+     "type": "dragon",
+     "share": 0.125
+    },
+    {
+     "type": "grass",
+     "share": 0.125
+    }
+   ]
+  },
+  {
+   "generation": 7,
+   "strongest": [
+    {
+     "type": "steel",
+     "generation": 7,
+     "n": 4,
+     "mean": 536.3
+    },
+    {
+     "type": "dragon",
+     "generation": 7,
+     "n": 5,
+     "mean": 536
+    },
+    {
+     "type": "fighting",
+     "generation": 7,
+     "n": 6,
+     "mean": 534.7
+    }
+   ],
+   "mostCommon": [
+    {
+     "type": "grass",
+     "share": 0.148
+    },
+    {
+     "type": "water",
+     "share": 0.148
+    },
+    {
+     "type": "fairy",
+     "share": 0.136
+    }
+   ]
+  },
+  {
+   "generation": 8,
+   "strongest": [
+    {
+     "type": "ghost",
+     "generation": 8,
+     "n": 5,
+     "mean": 526.2
+    },
+    {
+     "type": "fire",
+     "generation": 8,
+     "n": 3,
+     "mean": 521.7
+    },
+    {
+     "type": "dragon",
+     "generation": 8,
+     "n": 5,
+     "mean": 516
+    }
+   ],
+   "mostCommon": [
+    {
+     "type": "dragon",
+     "share": 0.115
+    },
+    {
+     "type": "water",
+     "share": 0.115
+    },
+    {
+     "type": "dark",
+     "share": 0.104
+    }
+   ]
+  },
+  {
+   "generation": 9,
+   "strongest": [
+    {
+     "type": "dragon",
+     "generation": 9,
+     "n": 9,
+     "mean": 564
+    },
+    {
+     "type": "ice",
+     "generation": 9,
+     "n": 3,
+     "mean": 563.7
+    },
+    {
+     "type": "fighting",
+     "generation": 9,
+     "n": 8,
+     "mean": 544.4
+    }
+   ],
+   "mostCommon": [
+    {
+     "type": "grass",
+     "share": 0.167
+    },
+    {
+     "type": "dragon",
+     "share": 0.117
+    },
+    {
+     "type": "normal",
+     "share": 0.117
+    }
+   ]
+  }
+ ],
+ "roleShare": [
+  {
+   "generation": 1,
+   "hp": 0.131,
+   "atk": 0.295,
+   "def": 0.115,
+   "spa": 0.164,
+   "spd": 0.098,
+   "spe": 0.197
+  },
+  {
+   "generation": 2,
+   "hp": 0.143,
+   "atk": 0.238,
+   "def": 0.19,
+   "spa": 0.143,
+   "spd": 0.167,
+   "spe": 0.119
+  },
+  {
+   "generation": 3,
+   "hp": 0.161,
+   "atk": 0.339,
+   "def": 0.081,
+   "spa": 0.129,
+   "spd": 0.161,
+   "spe": 0.129
+  },
+  {
+   "generation": 4,
+   "hp": 0.074,
+   "atk": 0.296,
+   "def": 0.185,
+   "spa": 0.241,
+   "spd": 0.037,
+   "spe": 0.167
+  },
+  {
+   "generation": 5,
+   "hp": 0.119,
+   "atk": 0.343,
+   "def": 0.104,
+   "spa": 0.179,
+   "spd": 0.045,
+   "spe": 0.209
+  },
+  {
+   "generation": 6,
+   "hp": 0.125,
+   "atk": 0.125,
+   "def": 0.25,
+   "spa": 0.156,
+   "spd": 0.125,
+   "spe": 0.219
+  },
+  {
+   "generation": 7,
+   "hp": 0.045,
+   "atk": 0.386,
+   "def": 0.182,
+   "spa": 0.182,
+   "spd": 0.136,
+   "spe": 0.068
+  },
+  {
+   "generation": 8,
+   "hp": 0.061,
+   "atk": 0.367,
+   "def": 0.204,
+   "spa": 0.163,
+   "spd": 0.102,
+   "spe": 0.102
+  },
+  {
+   "generation": 9,
+   "hp": 0.147,
+   "atk": 0.338,
+   "def": 0.118,
+   "spa": 0.235,
+   "spd": 0.029,
+   "spe": 0.132
+  }
+ ],
+ "specialisation": [
+  {
+   "generation": 1,
+   "spread": 0.118
+  },
+  {
+   "generation": 2,
+   "spread": 0.158
+  },
+  {
+   "generation": 3,
+   "spread": 0.121
+  },
+  {
+   "generation": 4,
+   "spread": 0.125
+  },
+  {
+   "generation": 5,
+   "spread": 0.134
+  },
+  {
+   "generation": 6,
+   "spread": 0.121
+  },
+  {
+   "generation": 7,
+   "spread": 0.158
+  },
+  {
+   "generation": 8,
+   "spread": 0.131
+  },
+  {
+   "generation": 9,
+   "spread": 0.124
+  }
+ ],
+ "timeline": {
+  "coreTrendByYear": {
+   "perYear": 1.55,
+   "perDecade": 15.5,
+   "ci95PerDecade": [
+    10.3,
+    20.6
+   ]
+  },
+  "strictCoreTrendByYear": {
+   "perYear": 0.87,
+   "perDecade": 8.7,
+   "ci95PerDecade": [
+    3.7,
+    13.9
+   ]
+  },
+  "generationGaps": [
+   {
+    "from": "Red & Green",
+    "to": "Gold & Silver",
+    "years": 3.73
+   },
+   {
+    "from": "Gold & Silver",
+    "to": "Ruby & Sapphire",
+    "years": 3
+   },
+   {
+    "from": "Ruby & Sapphire",
+    "to": "Diamond & Pearl",
+    "years": 3.85
+   },
+   {
+    "from": "Diamond & Pearl",
+    "to": "Black & White",
+    "years": 3.97
+   },
+   {
+    "from": "Black & White",
+    "to": "X & Y",
+    "years": 3.07
+   },
+   {
+    "from": "X & Y",
+    "to": "Sun & Moon",
+    "years": 3.1
+   },
+   {
+    "from": "Sun & Moon",
+    "to": "Sword & Shield",
+    "years": 2.99
+   },
+   {
+    "from": "Sword & Shield",
+    "to": "Scarlet & Violet",
+    "years": 3.01
+   }
+  ],
+  "newSpeciesPerYear": [
+   {
+    "generation": 1,
+    "species": 151,
+    "years": 3.73,
+    "perYear": 40.5
+   },
+   {
+    "generation": 2,
+    "species": 100,
+    "years": 3,
+    "perYear": 33.3
+   },
+   {
+    "generation": 3,
+    "species": 135,
+    "years": 3.85,
+    "perYear": 35
+   },
+   {
+    "generation": 4,
+    "species": 107,
+    "years": 3.97,
+    "perYear": 26.9
+   },
+   {
+    "generation": 5,
+    "species": 156,
+    "years": 3.07,
+    "perYear": 50.9
+   },
+   {
+    "generation": 6,
+    "species": 72,
+    "years": 3.1,
+    "perYear": 23.2
+   },
+   {
+    "generation": 7,
+    "species": 88,
+    "years": 2.99,
+    "perYear": 29.4
+   },
+   {
+    "generation": 8,
+    "species": 96,
+    "years": 3.01,
+    "perYear": 31.9
+   },
+   {
+    "generation": 9,
+    "species": 120,
+    "years": 2.91,
+    "perYear": 41.2
+   }
+  ],
+  "byPlatform": [
+   {
+    "platform": "Game Boy",
+    "years": "1996–1996",
+    "n": 151,
+    "meanAll": 407.6,
+    "core": {
+     "n": 61,
+     "mean": 484.6
+    },
+    "legendaryShare": 0.033,
+    "ubOrParadoxShare": 0
+   },
+   {
+    "platform": "Game Boy Color",
+    "years": "1999–1999",
+    "n": 100,
+    "meanAll": 407.2,
+    "core": {
+     "n": 42,
+     "mean": 467.4
+    },
+    "legendaryShare": 0.06,
+    "ubOrParadoxShare": 0
+   },
+   {
+    "platform": "Game Boy Advance",
+    "years": "2002–2002",
+    "n": 135,
+    "meanAll": 403.7,
+    "core": {
+     "n": 62,
+     "mean": 464.8
+    },
+    "legendaryShare": 0.074,
+    "ubOrParadoxShare": 0
+   },
+   {
+    "platform": "Nintendo DS",
+    "years": "2006–2010",
+    "n": 263,
+    "meanAll": 433.8,
+    "core": {
+     "n": 121,
+     "mean": 494.3
+    },
+    "legendaryShare": 0.103,
+    "ubOrParadoxShare": 0
+   },
+   {
+    "platform": "Nintendo 3DS",
+    "years": "2013–2017",
+    "n": 158,
+    "meanAll": 440.2,
+    "core": {
+     "n": 76,
+     "mean": 497.1
+    },
+    "legendaryShare": 0.127,
+    "ubOrParadoxShare": 0.07
+   },
+   {
+    "platform": "Nintendo Switch",
+    "years": "2018–2024",
+    "n": 218,
+    "meanAll": 449.3,
+    "core": {
+     "n": 117,
+     "mean": 511.6
+    },
+    "legendaryShare": 0.119,
+    "ubOrParadoxShare": 0.092
+   }
+  ],
+  "launchVsPostLaunch": {
+   "launch": {
+    "n": 986,
+    "meanAll": 423.4,
+    "core": {
+     "n": 461,
+     "mean": 489.1
+    },
+    "legendaryShare": 0.077,
+    "ubOrParadoxShare": 0.021
+   },
+   "postLaunch": {
+    "n": 39,
+    "meanAll": 536.1,
+    "core": {
+     "n": 18,
+     "mean": 555.2
+    },
+    "legendaryShare": 0.462,
+    "ubOrParadoxShare": 0.256
+   }
+  },
+  "postLaunchGames": [
+   {
+    "game": "Ultra Sun & Ultra Moon",
+    "kind": "follow-up",
+    "date": "2017-11-17",
+    "n": 5,
+    "meanAll": 540,
+    "core": {
+     "n": 3,
+     "mean": 560
+    },
+    "legendaryShare": 0.2,
+    "ubOrParadoxShare": 0.8,
+    "species": [
+     "Poipole (420)",
+     "Naganadel (540)",
+     "Stakataka (570)",
+     "Blacephalon (570)",
+     "Zeraora (600)"
+    ]
+   },
+   {
+    "game": "Let's Go, Pikachu! & Eevee!",
+    "kind": "spin-off-core",
+    "date": "2018-11-16",
+    "n": 2,
+    "meanAll": 450,
+    "core": {
+     "n": 0,
+     "mean": null
+    },
+    "legendaryShare": 1,
+    "ubOrParadoxShare": 0,
+    "species": [
+     "Meltan (300)",
+     "Melmetal (600)"
+    ]
+   },
+   {
+    "game": "The Isle of Armor",
+    "kind": "dlc",
+    "date": "2020-06-17",
+    "n": 3,
+    "meanAll": 511.7,
+    "core": {
+     "n": 0,
+     "mean": null
+    },
+    "legendaryShare": 1,
+    "ubOrParadoxShare": 0,
+    "species": [
+     "Kubfu (385)",
+     "Urshifu (550)",
+     "Zarude (600)"
+    ]
+   },
+   {
+    "game": "The Crown Tundra",
+    "kind": "dlc",
+    "date": "2020-10-22",
+    "n": 5,
+    "meanAll": 564,
+    "core": {
+     "n": 0,
+     "mean": null
+    },
+    "legendaryShare": 1,
+    "ubOrParadoxShare": 0,
+    "species": [
+     "Regieleki (580)",
+     "Regidrago (580)",
+     "Glastrier (580)",
+     "Spectrier (580)",
+     "Calyrex (500)"
+    ]
+   },
+   {
+    "game": "Legends: Arceus",
+    "kind": "spin-off-core",
+    "date": "2022-01-28",
+    "n": 7,
+    "meanAll": 529.3,
+    "core": {
+     "n": 6,
+     "mean": 520.8
+    },
+    "legendaryShare": 0.143,
+    "ubOrParadoxShare": 0,
+    "species": [
+     "Wyrdeer (525)",
+     "Kleavor (500)",
+     "Ursaluna (550)",
+     "Basculegion (530)",
+     "Sneasler (510)",
+     "Overqwil (510)",
+     "Enamorus (580)"
+    ]
+   },
+   {
+    "game": "Scarlet & Violet Tera Raid event (v1.2.0)",
+    "kind": "event",
+    "date": "2023-02-27",
+    "n": 2,
+    "meanAll": 590,
+    "core": {
+     "n": 2,
+     "mean": 590
+    },
+    "legendaryShare": 0,
+    "ubOrParadoxShare": 1,
+    "species": [
+     "Walking Wake (590)",
+     "Iron Leaves (590)"
+    ]
+   },
+   {
+    "game": "The Teal Mask",
+    "kind": "dlc",
+    "date": "2023-09-13",
+    "n": 7,
+    "meanAll": 502.3,
+    "core": {
+     "n": 1,
+     "mean": 508
+    },
+    "legendaryShare": 0.571,
+    "ubOrParadoxShare": 0,
+    "species": [
+     "Dipplin (485)",
+     "Poltchageist (308)",
+     "Sinistcha (508)",
+     "Okidogi (555)",
+     "Munkidori (555)",
+     "Fezandipiti (555)",
+     "Ogerpon (550)"
+    ]
+   },
+   {
+    "game": "The Indigo Disk",
+    "kind": "dlc",
+    "date": "2023-12-14",
+    "n": 7,
+    "meanAll": 564.3,
+    "core": {
+     "n": 6,
+     "mean": 583.3
+    },
+    "legendaryShare": 0.143,
+    "ubOrParadoxShare": 0.571,
+    "species": [
+     "Archaludon (600)",
+     "Hydrapple (540)",
+     "Gouging Fire (590)",
+     "Raging Bolt (590)",
+     "Iron Boulder (590)",
+     "Iron Crown (590)",
+     "Terapagos (450)"
+    ]
+   },
+   {
+    "game": "Mochi Mayhem (epilogue)",
+    "kind": "dlc",
+    "date": "2024-01-11",
+    "n": 1,
+    "meanAll": 600,
+    "core": {
+     "n": 0,
+     "mean": null
+    },
+    "legendaryShare": 1,
+    "ubOrParadoxShare": 0,
+    "species": [
+     "Pecharunt (600)"
+    ]
+   }
+  ]
+ },
+ "outliers": {
+  "strongestCore": [
+   {
+    "id": 289,
+    "name": "Slaking",
+    "generation": 3,
+    "types": [
+     "normal"
+    ],
+    "bst": 670
+   },
+   {
+    "id": 149,
+    "name": "Dragonite",
+    "generation": 1,
+    "types": [
+     "dragon",
+     "flying"
+    ],
+    "bst": 600
+   },
+   {
+    "id": 248,
+    "name": "Tyranitar",
+    "generation": 2,
+    "types": [
+     "rock",
+     "dark"
+    ],
+    "bst": 600
+   },
+   {
+    "id": 373,
+    "name": "Salamence",
+    "generation": 3,
+    "types": [
+     "dragon",
+     "flying"
+    ],
+    "bst": 600
+   },
+   {
+    "id": 376,
+    "name": "Metagross",
+    "generation": 3,
+    "types": [
+     "steel",
+     "psychic"
+    ],
+    "bst": 600
+   },
+   {
+    "id": 445,
+    "name": "Garchomp",
+    "generation": 4,
+    "types": [
+     "dragon",
+     "ground"
+    ],
+    "bst": 600
+   },
+   {
+    "id": 635,
+    "name": "Hydreigon",
+    "generation": 5,
+    "types": [
+     "dark",
+     "dragon"
+    ],
+    "bst": 600
+   },
+   {
+    "id": 706,
+    "name": "Goodra",
+    "generation": 6,
+    "types": [
+     "dragon"
+    ],
+    "bst": 600
+   },
+   {
+    "id": 784,
+    "name": "Kommo-o",
+    "generation": 7,
+    "types": [
+     "dragon",
+     "fighting"
+    ],
+    "bst": 600
+   },
+   {
+    "id": 887,
+    "name": "Dragapult",
+    "generation": 8,
+    "types": [
+     "dragon",
+     "ghost"
+    ],
+    "bst": 600
+   },
+   {
+    "id": 998,
+    "name": "Baxcalibur",
+    "generation": 9,
+    "types": [
+     "dragon",
+     "ice"
+    ],
+    "bst": 600
+   },
+   {
+    "id": 1018,
+    "name": "Archaludon",
+    "generation": 9,
+    "types": [
+     "steel",
+     "dragon"
+    ],
+    "bst": 600
+   }
+  ],
+  "weakestCore": [
+   {
+    "id": 746,
+    "name": "Wishiwashi",
+    "generation": 7,
+    "types": [
+     "water"
+    ],
+    "bst": 175
+   },
+   {
+    "id": 292,
+    "name": "Shedinja",
+    "generation": 3,
+    "types": [
+     "bug",
+     "ghost"
+    ],
+    "bst": 236
+   },
+   {
+    "id": 235,
+    "name": "Smeargle",
+    "generation": 2,
+    "types": [
+     "normal"
+    ],
+    "bst": 250
+   },
+   {
+    "id": 132,
+    "name": "Ditto",
+    "generation": 1,
+    "types": [
+     "normal"
+    ],
+    "bst": 288
+   },
+   {
+    "id": 225,
+    "name": "Delibird",
+    "generation": 2,
+    "types": [
+     "ice",
+     "flying"
+    ],
+    "bst": 330
+   },
+   {
+    "id": 370,
+    "name": "Luvdisc",
+    "generation": 3,
+    "types": [
+     "water"
+    ],
+    "bst": 330
+   },
+   {
+    "id": 201,
+    "name": "Unown",
+    "generation": 2,
+    "types": [
+     "psychic"
+    ],
+    "bst": 336
+   },
+   {
+    "id": 327,
+    "name": "Spinda",
+    "generation": 3,
+    "types": [
+     "normal"
+    ],
+    "bst": 360
+   }
+  ],
+  "pseudos": [
+   {
+    "id": 149,
+    "name": "Dragonite",
+    "generation": 1,
+    "types": [
+     "dragon",
+     "flying"
+    ],
+    "bst": 600
+   },
+   {
+    "id": 248,
+    "name": "Tyranitar",
+    "generation": 2,
+    "types": [
+     "rock",
+     "dark"
+    ],
+    "bst": 600
+   },
+   {
+    "id": 373,
+    "name": "Salamence",
+    "generation": 3,
+    "types": [
+     "dragon",
+     "flying"
+    ],
+    "bst": 600
+   },
+   {
+    "id": 376,
+    "name": "Metagross",
+    "generation": 3,
+    "types": [
+     "steel",
+     "psychic"
+    ],
+    "bst": 600
+   },
+   {
+    "id": 445,
+    "name": "Garchomp",
+    "generation": 4,
+    "types": [
+     "dragon",
+     "ground"
+    ],
+    "bst": 600
+   },
+   {
+    "id": 635,
+    "name": "Hydreigon",
+    "generation": 5,
+    "types": [
+     "dark",
+     "dragon"
+    ],
+    "bst": 600
+   },
+   {
+    "id": 706,
+    "name": "Goodra",
+    "generation": 6,
+    "types": [
+     "dragon"
+    ],
+    "bst": 600
+   },
+   {
+    "id": 784,
+    "name": "Kommo-o",
+    "generation": 7,
+    "types": [
+     "dragon",
+     "fighting"
+    ],
+    "bst": 600
+   },
+   {
+    "id": 887,
+    "name": "Dragapult",
+    "generation": 8,
+    "types": [
+     "dragon",
+     "ghost"
+    ],
+    "bst": 600
+   },
+   {
+    "id": 998,
+    "name": "Baxcalibur",
+    "generation": 9,
+    "types": [
+     "dragon",
+     "ice"
+    ],
+    "bst": 600
+   }
+  ],
+  "weakestLegendaries": [
+   {
+    "id": 1024,
+    "name": "Terapagos",
+    "generation": 9,
+    "types": [
+     "normal"
+    ],
+    "bst": 450
+   },
+   {
+    "id": 898,
+    "name": "Calyrex",
+    "generation": 8,
+    "types": [
+     "psychic",
+     "grass"
+    ],
+    "bst": 500
+   },
+   {
+    "id": 892,
+    "name": "Urshifu",
+    "generation": 8,
+    "types": [
+     "fighting",
+     "dark"
+    ],
+    "bst": 550
+   },
+   {
+    "id": 1017,
+    "name": "Ogerpon",
+    "generation": 9,
+    "types": [
+     "grass"
+    ],
+    "bst": 550
+   },
+   {
+    "id": 1014,
+    "name": "Okidogi",
+    "generation": 9,
+    "types": [
+     "poison",
+     "fighting"
+    ],
+    "bst": 555
+   },
+   {
+    "id": 1015,
+    "name": "Munkidori",
+    "generation": 9,
+    "types": [
+     "poison",
+     "psychic"
+    ],
+    "bst": 555
+   },
+   {
+    "id": 1016,
+    "name": "Fezandipiti",
+    "generation": 9,
+    "types": [
+     "poison",
+     "fairy"
+    ],
+    "bst": 555
+   },
+   {
+    "id": 773,
+    "name": "Silvally",
+    "generation": 7,
+    "types": [
+     "normal"
+    ],
+    "bst": 570
+   }
+  ],
+  "coreAbove600": [
+   {
+    "id": 289,
+    "name": "Slaking",
+    "generation": 3,
+    "types": [
+     "normal"
+    ],
+    "bst": 670
+   }
+  ],
+  "aboveGenMean": [
+   {
+    "id": 289,
+    "name": "Slaking",
+    "generation": 3,
+    "types": [
+     "normal"
+    ],
+    "bst": 670,
+    "vsGen": 205.2
+   },
+   {
+    "id": 373,
+    "name": "Salamence",
+    "generation": 3,
+    "types": [
+     "dragon",
+     "flying"
+    ],
+    "bst": 600,
+    "vsGen": 135.2
+   },
+   {
+    "id": 376,
+    "name": "Metagross",
+    "generation": 3,
+    "types": [
+     "steel",
+     "psychic"
+    ],
+    "bst": 600,
+    "vsGen": 135.2
+   },
+   {
+    "id": 248,
+    "name": "Tyranitar",
+    "generation": 2,
+    "types": [
+     "rock",
+     "dark"
+    ],
+    "bst": 600,
+    "vsGen": 132.6
+   },
+   {
+    "id": 149,
+    "name": "Dragonite",
+    "generation": 1,
+    "types": [
+     "dragon",
+     "flying"
+    ],
+    "bst": 600,
+    "vsGen": 115.4
+   },
+   {
+    "id": 635,
+    "name": "Hydreigon",
+    "generation": 5,
+    "types": [
+     "dark",
+     "dragon"
+    ],
+    "bst": 600,
+    "vsGen": 106.7
+   },
+   {
+    "id": 445,
+    "name": "Garchomp",
+    "generation": 4,
+    "types": [
+     "dragon",
+     "ground"
+    ],
+    "bst": 600,
+    "vsGen": 104.4
+   },
+   {
+    "id": 784,
+    "name": "Kommo-o",
+    "generation": 7,
+    "types": [
+     "dragon",
+     "fighting"
+    ],
+    "bst": 600,
+    "vsGen": 103.5
+   },
+   {
+    "id": 887,
+    "name": "Dragapult",
+    "generation": 8,
+    "types": [
+     "dragon",
+     "ghost"
+    ],
+    "bst": 600,
+    "vsGen": 102.6
+   },
+   {
+    "id": 706,
+    "name": "Goodra",
+    "generation": 6,
+    "types": [
+     "dragon"
+    ],
+    "bst": 600,
+    "vsGen": 102.1
+   }
+  ],
+  "belowGenMean": [
+   {
+    "id": 746,
+    "name": "Wishiwashi",
+    "generation": 7,
+    "types": [
+     "water"
+    ],
+    "bst": 175,
+    "vsGen": -321.5
+   },
+   {
+    "id": 292,
+    "name": "Shedinja",
+    "generation": 3,
+    "types": [
+     "bug",
+     "ghost"
+    ],
+    "bst": 236,
+    "vsGen": -228.8
+   },
+   {
+    "id": 235,
+    "name": "Smeargle",
+    "generation": 2,
+    "types": [
+     "normal"
+    ],
+    "bst": 250,
+    "vsGen": -217.4
+   },
+   {
+    "id": 132,
+    "name": "Ditto",
+    "generation": 1,
+    "types": [
+     "normal"
+    ],
+    "bst": 288,
+    "vsGen": -196.6
+   },
+   {
+    "id": 225,
+    "name": "Delibird",
+    "generation": 2,
+    "types": [
+     "ice",
+     "flying"
+    ],
+    "bst": 330,
+    "vsGen": -137.4
+   },
+   {
+    "id": 370,
+    "name": "Luvdisc",
+    "generation": 3,
+    "types": [
+     "water"
+    ],
+    "bst": 330,
+    "vsGen": -134.8
+   }
+  ]
+ }
+}

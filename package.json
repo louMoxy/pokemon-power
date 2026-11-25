@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "data:fetch": "node scripts/fetch-data.mjs",
     "data:stats": "node scripts/quick-stats.mjs",
-    "data:derive": "node scripts/build-derived.mjs"
+    "data:derive": "node scripts/build-derived.mjs",
+    "data:analyze": "node scripts/analyze.mjs",
+    "data:all": "npm run data:fetch && npm run data:derive && npm run data:analyze"
   },
   "dependencies": {
     "three": "0.170.0"

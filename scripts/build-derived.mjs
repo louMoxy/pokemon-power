@@ -8,6 +8,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { PNG } from 'pngjs';
 import { UMAP } from 'umap-js';
+import { GAMES, DEBUT_OVERRIDES } from './games.mjs';
 
 const DATA = 'public/data/pokemon.json';
 const ATLAS = 'public/data/atlas.png';
@@ -160,7 +161,24 @@ for (let i = 0; i < data.length; i++) {
 }
 await fs.writeFile(ATLAS, PNG.sync.write(atlas));
 
+// ---------- Debut game and release date
+const gameById = Object.fromEntries(GAMES.map((g) => [g.id, g]));
+const baseGame = Object.fromEntries(GAMES.filter((g) => g.kind === 'base').map((g) => [g.gen, g]));
+const decimalYear = (iso) => {
+  const d = new Date(iso + 'T00:00:00Z'), y = d.getUTCFullYear();
+  return +(y + (d - Date.UTC(y, 0, 1)) / (Date.UTC(y + 1, 0, 1) - Date.UTC(y, 0, 1))).toFixed(3);
+};
+const releases = data.map((p) => {
+  const g = DEBUT_OVERRIDES[p.id] ? gameById[DEBUT_OVERRIDES[p.id]] : baseGame[p.generation];
+  if (!g || g.gen !== p.generation) throw new Error(`Bad debut game for #${p.id} ${p.name}`);
+  return { debutGame: g.id, debutDate: g.jp, debutDateNA: g.na, debutYear: decimalYear(g.jp), platform: g.platform };
+});
+await fs.writeFile('public/data/games.json', JSON.stringify(GAMES.map((g) => ({
+  ...g, year: decimalYear(g.jp), speciesDebuted: releases.filter((r) => r.debutGame === g.id).length,
+})), null, 1));
+
 data.forEach((p, i) => {
+  Object.assign(p, releases[i]);
   p.pca = pcaN[i];
   p.umap = umapN[i];
   p.atlas = i;
